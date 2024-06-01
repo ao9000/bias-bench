@@ -22,11 +22,18 @@ parser.add_argument(
     action="store",
     type=str,
     default="BertForMaskedLM",
+    # choices=[
+    #     "BertForMaskedLM",
+    #     "AlbertForMaskedLM",
+    #     "RobertaForMaskedLM",
+    #     "GPT2LMHeadModel",
+    # ],
     choices=[
         "BertForMaskedLM",
         "AlbertForMaskedLM",
         "RobertaForMaskedLM",
         "GPT2LMHeadModel",
+        "LlamaForCausalLM",  # Used for Llama 2 models
     ],
     help="Model to evalute (e.g., BertForMaskedLM). Typically, these correspond to a HuggingFace "
     "class.",
@@ -36,7 +43,8 @@ parser.add_argument(
     action="store",
     type=str,
     default="bert-base-uncased",
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
+    # choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
+    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "meta-llama/Llama-2-7b-chat-hf"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )
@@ -80,6 +88,10 @@ if __name__ == "__main__":
     results = runner()
 
     print(f"Metric: {results}")
+
+    # Modified
+    # Remove any slash from file experiment_id
+    experiment_id = experiment_id.replace("/", "_")
 
     os.makedirs(f"{args.persistent_dir}/results/crows", exist_ok=True)
     with open(f"{args.persistent_dir}/results/crows/{experiment_id}.json", "w") as f:
