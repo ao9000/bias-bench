@@ -6,6 +6,20 @@ import transformers
 from bias_bench.debias.self_debias.modeling import GPT2Wrapper
 from bias_bench.debias.self_debias.modeling import MaskedLMWrapper
 
+################################ Modified ###############################################################
+from huggingface_hub import login
+login(token="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")
+class AutoModelForCausalLM:
+    """"To load huggingface models"""
+    def __new__(self, model_name_or_path):
+        return transformers.AutoModelForCausalLM.from_pretrained(model_name_or_path)
+
+
+class LlamaForCausalLM:
+    def __new__(self, model_name_or_path):
+        return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path)
+############################################################################################################
+
 
 class BertModel:
     def __new__(self, model_name_or_path):

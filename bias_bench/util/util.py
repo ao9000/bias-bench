@@ -1,3 +1,14 @@
+# def _is_generative(model):
+#     # Checks if we are running an autoregressive model.
+#     return model in [
+#         "GPT2LMHeadModel",
+#         "SentenceDebiasGPT2LMHeadModel",
+#         "INLPGPT2LMHeadModel",
+#         "CDAGPT2LMHeadModel",
+#         "DropoutGPT2LMHeadModel",
+#         "SelfDebiasGPT2LMHeadModel",
+#     ]
+
 def _is_generative(model):
     # Checks if we are running an autoregressive model.
     return model in [
@@ -7,6 +18,8 @@ def _is_generative(model):
         "CDAGPT2LMHeadModel",
         "DropoutGPT2LMHeadModel",
         "SelfDebiasGPT2LMHeadModel",
+        "LlamaForCausalLM", # For llama 2 models
+        "AutoModelForCausalLM", # For other huggingface models
     ]
 
 
