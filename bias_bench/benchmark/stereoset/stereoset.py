@@ -7,6 +7,8 @@ from tqdm import tqdm
 
 from bias_bench.benchmark.stereoset import dataloader
 
+from bias_bench.util.util import start_token_mapper
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -99,7 +101,7 @@ class StereoSetRunner:
         # Use either the generative or discriminative version of likelihood scoring.
         if self._is_generative:
             # Find start token for the model
-            unconditional_start_token = self.start_token_mapper(self._model_name_or_path.split("/")[-1].split("-")[0].lower())
+            unconditional_start_token = start_token_mapper(self._model_name_or_path.split("/")[-1].split("-")[0].lower())
             print(f"Unconditional start token: {unconditional_start_token}")
             sentence_probabilities = self._likelihood_score_generative(unconditional_start_token)
         else:
@@ -189,15 +191,6 @@ class StereoSetRunner:
 
         return sentence_probabilities
 
-    @staticmethod
-    def start_token_mapper(model_name):
-        start_token_mapper = {
-            "gpt2": "<|endoftext|>",
-            "llama": "<s>",
-            "phi": "",
-        }
-        return start_token_mapper[model_name]
-
     def _likelihood_score_generative(self, unconditional_start_token):
         """Score intrasentence examples using likelihood scoring as proposed by Nadeem et al. for
         generative models (e.g., GPT-2).
@@ -231,11 +224,12 @@ class StereoSetRunner:
 
             ################### MODIFIED ######################
             logits = initial_token_probabilities.logits
+            print(logits.shape)
             if logits.shape[1] == 2:
                 joint_probabilities = torch.softmax(logits[:, 0, :], dim=-1) * torch.softmax(logits[:, 1, :], dim=-1)
                 initial_token_probabilities = joint_probabilities.unsqueeze(0)
             else:
-                initial_token_probabilities = torch.softmax(logits[:, 1, :], dim=-1).unsqueeze(0)
+                initial_token_probabilities = torch.softmax(initial_token_probabilities[0], dim=-1)
             ####################################################
 
             # Ensure that our batch size is 1 and that our inital token isn't split into subwords.

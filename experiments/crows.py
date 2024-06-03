@@ -34,6 +34,7 @@ parser.add_argument(
         "RobertaForMaskedLM",
         "GPT2LMHeadModel",
         "LlamaForCausalLM",  # Used for Llama 2 models
+        "PhiForCausalLM", # Used for Phi models
     ],
     help="Model to evalute (e.g., BertForMaskedLM). Typically, these correspond to a HuggingFace "
     "class.",
@@ -44,7 +45,7 @@ parser.add_argument(
     type=str,
     default="bert-base-uncased",
     # choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "meta-llama/Llama-2-7b-chat-hf"],
+    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "meta-llama/Llama-2-7b-chat-hf", "microsoft/phi-2"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )
@@ -84,6 +85,7 @@ if __name__ == "__main__":
         input_file=f"{args.persistent_dir}/data/crows/crows_pairs_anonymized.csv",
         bias_type=args.bias_type,
         is_generative=_is_generative(args.model),  # Affects model scoring.
+        model_name_or_path=args.model_name_or_path, # Added to determine unconditional start token
     )
     results = runner()
 

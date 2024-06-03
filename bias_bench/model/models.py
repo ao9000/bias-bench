@@ -7,13 +7,28 @@ from bias_bench.debias.self_debias.modeling import GPT2Wrapper
 from bias_bench.debias.self_debias.modeling import MaskedLMWrapper
 
 ################################ Modified ###############################################################
+from pathlib import Path
+import yaml
+CONFIG_FILE = Path('../config.yml')
+access_token = ''
+try:
+    with open(CONFIG_FILE) as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+    access_token = config['HF_KEY']
+except FileNotFoundError:
+    print('No config file found. HF API keys will not be loaded.')
+
 from huggingface_hub import login
-login(token="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")
+login(token=access_token)
+
 class AutoModelForCausalLM:
     """"To load huggingface models"""
     def __new__(self, model_name_or_path):
         return transformers.AutoModelForCausalLM.from_pretrained(model_name_or_path)
 
+class PhiForCausalLM:
+    def __new__(self, model_name_or_path):
+        return transformers.PhiForCausalLM.from_pretrained(model_name_or_path)
 
 class LlamaForCausalLM:
     def __new__(self, model_name_or_path):

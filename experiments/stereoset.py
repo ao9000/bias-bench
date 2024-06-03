@@ -34,6 +34,7 @@ parser.add_argument(
         "RobertaForMaskedLM",
         "GPT2LMHeadModel",
         "LlamaForCausalLM", # Used for Llama 2 models
+        "PhiForCausalLM", # Used for Phi models
         "AutoModelForCausalLM", # Can load any model in huggingface
     ],
     help="Model to evalute (e.g., BertForMaskedLM). Typically, these correspond to a HuggingFace "
@@ -45,7 +46,7 @@ parser.add_argument(
     type=str,
     default="bert-base-uncased",
     # choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "meta-llama/Llama-2-7b-chat-hf"],
+    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "meta-llama/Llama-2-7b-chat-hf", "microsoft/phi-2", "microsoft/Phi-3-mini-4k-instruct"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )

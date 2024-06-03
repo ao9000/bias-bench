@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 
+from bias_bench.util.util import start_token_mapper
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -44,6 +45,7 @@ class CrowSPairsRunner:
         is_generative=False,
         is_self_debias=False,
         bias_type=None,
+        model_name_or_path=None,
     ):
         """Initializes CrowS-Pairs benchmark runner.
 
@@ -61,6 +63,7 @@ class CrowSPairsRunner:
         self._is_self_debias = is_self_debias
         # CrowS-Pairs labels race examples with "race-color".
         self._bias_type = bias_type if bias_type != "race" else "race-color"
+        self._model_name_or_path = model_name_or_path # Added for unconditional start token.
 
     def __call__(self):
         if self._is_generative:
@@ -217,6 +220,10 @@ class CrowSPairsRunner:
         neutral = 0
         total = len(df_data.index)
 
+        # Get unconditional start token of the model.
+        unconditional_start_token = start_token_mapper(self._model_name_or_path.split("/")[-1].split("-")[0].lower())
+        print(f"Unconditional start token: {unconditional_start_token}")
+
         with tqdm(total=total) as pbar:
             for index, data in df_data.iterrows():
                 direction = data["direction"]
@@ -227,8 +234,8 @@ class CrowSPairsRunner:
                 sent1_token_ids = self._tokenizer.encode(sent1)
                 sent2_token_ids = self._tokenizer.encode(sent2)
 
-                score1 = self._joint_log_probability(sent1_token_ids)
-                score2 = self._joint_log_probability(sent2_token_ids)
+                score1 = self._joint_log_probability(sent1_token_ids, unconditional_start_token)
+                score2 = self._joint_log_probability(sent2_token_ids, unconditional_start_token)
 
                 N += 1
                 pair_score = 0
@@ -287,12 +294,17 @@ class CrowSPairsRunner:
 
         return round((stereo_score + antistereo_score) / N * 100, 2)
 
-    def _joint_log_probability(self, tokens):
+    def _joint_log_probability(self, tokens, unconditional_start_token):
         start_token = (
-            torch.tensor(self._tokenizer.encode("<|endoftext|>"))
+            torch.tensor(self._tokenizer.encode(unconditional_start_token))
             .to(device)
             .unsqueeze(0)
         )
+        # start_token = (
+        #     torch.tensor(self._tokenizer.encode("<|endoftext|>"))
+        #     .to(device)
+        #     .unsqueeze(0)
+        # )
 
         if not self._is_self_debias:
             initial_token_probabilities = self._model(start_token)
@@ -353,6 +365,73 @@ class CrowSPairsRunner:
         score = np.power(2, score)
 
         return score
+
+    # def _joint_log_probability(self, tokens):
+    #     start_token = (
+    #         torch.tensor(self._tokenizer.encode("<|endoftext|>"))
+    #         .to(device)
+    #         .unsqueeze(0)
+    #     )
+    #
+    #     if not self._is_self_debias:
+    #         initial_token_probabilities = self._model(start_token)
+    #         initial_token_probabilities = torch.softmax(
+    #             initial_token_probabilities[0], dim=-1
+    #         )
+    #
+    #     tokens_tensor = torch.tensor(tokens).to(device).unsqueeze(0)
+    #
+    #     with torch.no_grad():
+    #         if self._is_self_debias:
+    #             debiasing_prefixes = [DEBIASING_PREFIXES[self._bias_type]]
+    #             (logits, input_ids,) = self._model.compute_loss_self_debiasing(
+    #                 tokens_tensor, debiasing_prefixes=debiasing_prefixes
+    #             )
+    #
+    #             # Lengths of prompts:
+    #             # 13 for gender
+    #             # 15 for race
+    #             # 13 for religion
+    #             bias_type_to_position = {"gender": 13, "race-color": 15, "religion": 13}
+    #
+    #             # Get the first token prob.
+    #             probs = torch.softmax(
+    #                 logits[1, bias_type_to_position[self._bias_type] - 1], dim=-1
+    #             )
+    #             joint_sentence_probability = [probs[tokens[0]].item()]
+    #
+    #             # Don't include the prompt.
+    #             logits = logits[:, bias_type_to_position[self._bias_type] :, :]
+    #
+    #             output = torch.softmax(logits, dim=-1)
+    #
+    #         else:
+    #             joint_sentence_probability = [
+    #                 initial_token_probabilities[0, 0, tokens[0]].item()
+    #             ]
+    #
+    #             output = torch.softmax(self._model(tokens_tensor)[0], dim=-1)
+    #
+    #     if self._is_self_debias:
+    #         for idx in range(1, len(tokens)):
+    #             joint_sentence_probability.append(
+    #                 output[1, idx - 1, tokens[idx]].item()
+    #             )
+    #
+    #     else:
+    #         for idx in range(1, len(tokens)):
+    #             joint_sentence_probability.append(
+    #                 output[0, idx - 1, tokens[idx]].item()
+    #             )
+    #
+    #     # Ensure that we have a probability on every token.
+    #     assert len(tokens) == len(joint_sentence_probability)
+    #
+    #     score = np.sum([np.log2(i) for i in joint_sentence_probability])
+    #     score /= len(joint_sentence_probability)
+    #     score = np.power(2, score)
+    #
+    #     return score
 
     def _average_log_probability(self, token_ids, spans):
         probs = []
