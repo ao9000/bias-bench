@@ -164,8 +164,16 @@ def _encode(model, tokenizer, texts):
         inputs = tokenizer(text, return_tensors="pt")
         outputs = model(**inputs)
 
-        # Average over the last layer of hidden representations.
-        enc = outputs["last_hidden_state"]
+        # # Average over the last layer of hidden representations.
+        # enc = outputs["last_hidden_state"]
+
+        try:
+            enc = outputs["last_hidden_state"]
+            print(enc.shape)
+        except KeyError:
+            # Llama model does not have last_hidden_state key. returns: odict_keys(['logits', 'past_key_values'])
+            enc = outputs["logits"]
+
         enc = enc.mean(dim=1)
 
         # Following May et al., normalize the representation.

@@ -42,7 +42,8 @@ parser.add_argument(
     action="store",
     type=str,
     default="bert-base-uncased",
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
+    # choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
+    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "meta-llama/Llama-2-7b-chat-hf", "microsoft/phi-2"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )
@@ -51,7 +52,8 @@ parser.add_argument(
     action="store",
     type=str,
     default="BertModel",
-    choices=["BertModel", "AlbertModel", "RobertaModel", "GPT2Model"],
+    # choices=["BertModel", "AlbertModel", "RobertaModel", "GPT2Model"],
+    choices=["BertModel", "AlbertModel", "RobertaModel", "GPT2Model", "LlamaForCausalLM", "PhiForCausalLM"],
     help="Model to evalute (e.g., BertModel). Typically, these correspond to a HuggingFace "
     "class.",
 )
@@ -88,6 +90,10 @@ if __name__ == "__main__":
     )
     results = runner()
     print(results)
+
+    # Modified
+    # Remove any slash from file experiment_id
+    experiment_id = experiment_id.replace("/", "_")
 
     os.makedirs(f"{args.persistent_dir}/results/seat", exist_ok=True)
     with open(f"{args.persistent_dir}/results/seat/{experiment_id}.json", "w") as f:
