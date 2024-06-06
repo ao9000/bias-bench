@@ -23,8 +23,15 @@ class PerspectiveApiScorer:
         """
         :param api_key: the API key to use. For details, see https://support.perspectiveapi.com/s/docs-get-started
         """
+        # self._service = discovery.build(
+        #     "commentanalyzer", "v1alpha1", developerKey=api_key
+        # )
         self._service = discovery.build(
-            "commentanalyzer", "v1alpha1", developerKey=api_key
+            "commentanalyzer",
+            "v1alpha1",
+            discoveryServiceUrl="https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1",
+            static_discovery=False,
+            developerKey=api_key
         )
 
     def get_scores(

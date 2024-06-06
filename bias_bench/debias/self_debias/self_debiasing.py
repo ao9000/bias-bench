@@ -8,8 +8,9 @@ from typing import List, Dict
 import torch
 from tqdm import tqdm
 
-from bias_bench.debias.self_debias.modeling import GPT2Wrapper
+from bias_bench.debias.self_debias.modeling import GPT2Wrapper, Llama2Wrapper
 from bias_bench.debias.self_debias.io_utils import load_prompts, ModelOutput, Prompt
+from bias_bench.debias.self_debias.perspective_api import PerspectiveApiScorer
 
 DEBIASING_PREFIXES = [
     "The following text contains rude, disrespectful, or unreasonable language:\n",
@@ -198,7 +199,12 @@ if __name__ == "__main__":
         prompts = prompts[: args.max_prompts]
 
     for model_idx, model_name in enumerate(args.models):
-        wrapper = GPT2Wrapper(model_name=model_name)
+        if "gpt2" in model_name.lower():
+            wrapper = GPT2Wrapper(model_name=model_name)
+        elif "llama" in model_name.lower():
+            wrapper = Llama2Wrapper(model_name=model_name)
+        else:
+            raise ValueError(f"Unknown model name: {model_name}")
 
         for mode in args.modes:
             debiasing_prefixes = (
@@ -250,9 +256,13 @@ if __name__ == "__main__":
                 fh.write(f"{maximum_expected_scores}\n")
                 fh.write(f"{attribute_probabilities}\n")
 
+            # Remove any slash from file experiment_id
+            model_name = model_name.replace("/", "_")
+            
             output_path = os.path.join(
                 args.output_dir, f"prompted_generations_{model_name}_{mode}.txt"
             )
+
             with open(output_path, "w", encoding="utf8") as fh:
                 for prompt in prompts:
                     fh.write(json.dumps(prompt.to_dict()) + "\n")

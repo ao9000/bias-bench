@@ -390,3 +390,27 @@ class SelfDebiasingGPT2LMHeadModel(GPT2LMHeadModel, GenerationMixin):
                 )
         else:
             return input_ids
+
+
+from transformers import LlamaForCausalLM, GenerationMixin
+
+class SelfDebiasingLlama2LMHeadModel(LlamaForCausalLM, GenerationMixin):
+    """
+    This class represents a regular Llama2LMHeadModel that additionally has the capacity to perform self-debiasing. For self-debiasing, the
+    init_logits_processor function must be called. Otherwise, this model just performs regular language modeling.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.logits_processor = None  # type: Optional[SelfDebiasingLogitsProcessor]
+
+    def init_logits_processor(self, *args, **kwargs):
+        """Initialize the logits processor. For a list of arguments, see the self-debiasing logit processor's init function."""
+        self.logits_processor = SelfDebiasingLogitsProcessor(*args, **kwargs)
+
+    def _get_logits_processor(self, *args, **kwargs) -> LogitsProcessorList:
+        logits_processor = super()._get_logits_processor(*args, **kwargs)
+        if self.logits_processor is not None:
+            logits_processor.append(self.logits_processor)
+        return logits_processor
+
+
