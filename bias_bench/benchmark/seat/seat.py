@@ -168,21 +168,12 @@ def _encode(model, tokenizer, texts):
         # # Average over the last layer of hidden representations.
         # enc = outputs["last_hidden_state"]
 
-<<<<<<< Updated upstream
-        try:
-            enc = outputs["last_hidden_state"]
-            print(enc.shape)
-        except KeyError:
-            # Llama model does not have last_hidden_state key. returns: odict_keys(['logits', 'past_key_values'])
-            enc = outputs["logits"]
-=======
         # Modified
         try:
             enc = outputs["last_hidden_state"]
         except KeyError:
             # Llama model does not have last_hidden_state key. returns: odict_keys(['logits', 'past_key_values', 'hidden_states'])
             enc = outputs['hidden_states'][-1]
->>>>>>> Stashed changes
 
         enc = enc.mean(dim=1)
 

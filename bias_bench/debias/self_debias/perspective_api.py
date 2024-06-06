@@ -35,11 +35,7 @@ class PerspectiveApiScorer:
             "v1alpha1",
             discoveryServiceUrl="https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1",
             static_discovery=False,
-<<<<<<< Updated upstream
-            developerKey=api_key
-=======
             developerKey=PERSPECTIVE_API_KEY
->>>>>>> Stashed changes
         )
 
     def get_scores(
