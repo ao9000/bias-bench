@@ -82,12 +82,12 @@ if __name__ == "__main__":
         required=True,
         help="Path to a directory into which generated outputs are written",
     )
-    parser.add_argument(
-        "--api_key",
-        type=str,
-        required=True,
-        help="API Key for Perspective API, see https://support.perspectiveapi.com/s/docs-get-started",
-    )
+    # parser.add_argument(
+    #     "--api_key",
+    #     type=str,
+    #     required=True,
+    #     help="API Key for Perspective API, see https://support.perspectiveapi.com/s/docs-get-started",
+    # )
     parser.add_argument(
         "--models",
         type=str,
@@ -191,7 +191,7 @@ if __name__ == "__main__":
     random.seed(args.seed)
     torch.manual_seed(args.seed)
 
-    scorer = PerspectiveApiScorer(api_key=args.api_key)
+    scorer = PerspectiveApiScorer()
     prompts = load_prompts(
         args.prompts_filename, challenging_only=not args.not_challenging_only
     )

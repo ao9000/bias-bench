@@ -9,14 +9,30 @@ from bias_bench.debias.self_debias.modeling import MaskedLMWrapper
 ################################ Modified ###############################################################
 from pathlib import Path
 import yaml
+<<<<<<< Updated upstream
 CONFIG_FILE = Path('../config.yml')
 access_token = ''
+=======
+import bias_bench
+# Get the base project path from the bias_bench module
+BASE_PATH = Path(bias_bench.__path__[0]).parent
+# Construct the path to the config file
+CONFIG_FILE = BASE_PATH / 'config.yml'
+access_token = ''
+PERSPECTIVE_API_KEY = ''
+>>>>>>> Stashed changes
 try:
     with open(CONFIG_FILE) as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
     access_token = config['HF_KEY']
+<<<<<<< Updated upstream
 except FileNotFoundError:
     print('No config file found. HF API keys will not be loaded.')
+=======
+    PERSPECTIVE_API_KEY = config['PERSPECTIVE_AI_KEY']
+except FileNotFoundError:
+    print('No config file found. API keys will not be loaded.')
+>>>>>>> Stashed changes
 
 from huggingface_hub import login
 login(token=access_token)

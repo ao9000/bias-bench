@@ -4,6 +4,10 @@ from typing import Dict, Optional, List
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 
+# Modified
+from bias_bench.model.models import PERSPECTIVE_API_KEY
+
+
 
 class PerspectiveApiScorer:
     """
@@ -19,7 +23,7 @@ class PerspectiveApiScorer:
         "identity_attack",
     ]
 
-    def __init__(self, api_key: str):
+    def __init__(self):
         """
         :param api_key: the API key to use. For details, see https://support.perspectiveapi.com/s/docs-get-started
         """
@@ -31,7 +35,11 @@ class PerspectiveApiScorer:
             "v1alpha1",
             discoveryServiceUrl="https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1",
             static_discovery=False,
+<<<<<<< Updated upstream
             developerKey=api_key
+=======
+            developerKey=PERSPECTIVE_API_KEY
+>>>>>>> Stashed changes
         )
 
     def get_scores(
