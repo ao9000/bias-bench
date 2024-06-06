@@ -5,6 +5,7 @@ import re
 
 import numpy as np
 import torch
+from tqdm import tqdm
 
 from bias_bench.benchmark.seat import weat
 
@@ -74,13 +75,13 @@ class SEATRunner:
         tests = self._tests or all_tests
 
         results = []
-        for test in tests:
+        for test in tqdm(tests):
             print(f"Running test {test}")
 
             # Load the test data.
             encs = _load_json(os.path.join(self._data_dir, f"{test}{self.TEST_EXT}"))
 
-            print("Computing sentence encodings")
+            # print("Computing sentence encodings")
             encs_targ1 = _encode(
                 self._model, self._tokenizer, encs["targ1"]["examples"]
             )
@@ -99,7 +100,7 @@ class SEATRunner:
             encs["attr1"]["encs"] = encs_attr1
             encs["attr2"]["encs"] = encs_attr2
 
-            print("\tDone!")
+            # print("\tDone!")
 
             # Run the test on the encodings.
             esize, pval = weat.run_test(
@@ -167,17 +168,27 @@ def _encode(model, tokenizer, texts):
         # # Average over the last layer of hidden representations.
         # enc = outputs["last_hidden_state"]
 
+<<<<<<< Updated upstream
         try:
             enc = outputs["last_hidden_state"]
             print(enc.shape)
         except KeyError:
             # Llama model does not have last_hidden_state key. returns: odict_keys(['logits', 'past_key_values'])
             enc = outputs["logits"]
+=======
+        # Modified
+        try:
+            enc = outputs["last_hidden_state"]
+        except KeyError:
+            # Llama model does not have last_hidden_state key. returns: odict_keys(['logits', 'past_key_values', 'hidden_states'])
+            enc = outputs['hidden_states'][-1]
+>>>>>>> Stashed changes
 
         enc = enc.mean(dim=1)
 
         # Following May et al., normalize the representation.
-        encs[text] = enc.detach().view(-1).numpy()
+        # encs[text] = enc.detach().view(-1).numpy()
+        encs[text] = enc.detach().float().view(-1).numpy()
         encs[text] /= np.linalg.norm(encs[text])
 
     return encs
