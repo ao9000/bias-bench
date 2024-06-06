@@ -10,9 +10,12 @@ from bias_bench.debias.self_debias.modeling import MaskedLMWrapper
 from pathlib import Path
 import yaml
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 CONFIG_FILE = Path('../config.yml')
 access_token = ''
 =======
+=======
+>>>>>>> Stashed changes
 import bias_bench
 # Get the base project path from the bias_bench module
 BASE_PATH = Path(bias_bench.__path__[0]).parent
@@ -20,14 +23,23 @@ BASE_PATH = Path(bias_bench.__path__[0]).parent
 CONFIG_FILE = BASE_PATH / 'config.yml'
 access_token = ''
 PERSPECTIVE_API_KEY = ''
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 try:
     with open(CONFIG_FILE) as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
     access_token = config['HF_KEY']
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 except FileNotFoundError:
     print('No config file found. HF API keys will not be loaded.')
+=======
+    PERSPECTIVE_API_KEY = config['PERSPECTIVE_AI_KEY']
+except FileNotFoundError:
+    print('No config file found. API keys will not be loaded.')
+>>>>>>> Stashed changes
 =======
     PERSPECTIVE_API_KEY = config['PERSPECTIVE_AI_KEY']
 except FileNotFoundError:
@@ -40,15 +52,22 @@ login(token=access_token)
 class AutoModelForCausalLM:
     """"To load huggingface models"""
     def __new__(self, model_name_or_path):
-        return transformers.AutoModelForCausalLM.from_pretrained(model_name_or_path)
+        return transformers.AutoModelForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
+                                                                 output_hidden_states=True).bfloat16()
 
 class PhiForCausalLM:
     def __new__(self, model_name_or_path):
+<<<<<<< Updated upstream
         return transformers.PhiForCausalLM.from_pretrained(model_name_or_path)
+=======
+        return transformers.PhiForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
+                                                           output_hidden_states=True).bfloat16()
+>>>>>>> Stashed changes
 
 class LlamaForCausalLM:
     def __new__(self, model_name_or_path):
-        return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path)
+        return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
+                                                             output_hidden_states=True).bfloat16()
 ############################################################################################################
 
 
