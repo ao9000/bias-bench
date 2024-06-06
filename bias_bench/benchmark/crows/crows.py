@@ -66,11 +66,21 @@ class CrowSPairsRunner:
         self._model_name_or_path = model_name_or_path # Added for unconditional start token.
 
     def __call__(self):
-        if self._is_generative:
-            results = self._likelihood_score_generative()
+        if self._bias_type is not None:
+            if self._is_generative:
+                results = self._likelihood_score_generative()
+            else:
+                results = self._likelihood_score()
+            return results
         else:
-            results = self._likelihood_score()
-        return results
+            # Evaluate all bias types.
+            # Modified
+            results = {}
+            for bias_type in DEBIASING_PREFIXES.keys():
+                self._bias_type = bias_type
+                result = self._likelihood_score_generative() if self._is_generative else self._likelihood_score()
+                results[bias_type] = result
+            return results
 
     def _likelihood_score(self):
         """Evaluates against the CrowS-Pairs dataset using likelihood scoring."""
