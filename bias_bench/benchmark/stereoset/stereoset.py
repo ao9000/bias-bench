@@ -207,7 +207,7 @@ class StereoSetRunner:
         # Assume we are using GPT-2.
         # unconditional_start_token = "<|endoftext|>"
         start_token = (
-            torch.tensor(self._tokenizer.encode(unconditional_start_token))
+            torch.tensor(self._tokenizer.encode(unconditional_start_token, add_special_tokens=True))
             .to(device)
             .unsqueeze(0)
         )
@@ -226,6 +226,11 @@ class StereoSetRunner:
             logits = initial_token_probabilities.logits
             print(logits.shape)
             if logits.shape[1] == 2:
+                # # Option 1: Use only the first token probabilities
+                # initial_token_probabilities = torch.softmax(initial_token_probabilities[0], dim=-1)
+                # initial_token_probabilities = initial_token_probabilities[:, 0, :][None, ...]
+
+                # Option 2: Use the joint probabilities of the tokens
                 joint_probabilities = torch.softmax(logits[:, 0, :], dim=-1) * torch.softmax(logits[:, 1, :], dim=-1)
                 initial_token_probabilities = joint_probabilities.unsqueeze(0)
             else:
@@ -312,119 +317,6 @@ class StereoSetRunner:
                 predictions.append(probabilities)
 
         return predictions
-
-
-    # def _likelihood_score_generative(self):
-    #     """Score intrasentence examples using likelihood scoring as proposed by Nadeem et al. for
-    #     generative models (e.g., GPT-2).
-    #     """
-    #     # Use GPU, if available.
-    #     if self._is_self_debias:
-    #         self._intrasentence_model._model.to(device)
-    #     else:
-    #         model = self._intrasentence_model.to(device)
-    #
-    #     # Load the dataset.
-    #     stereoset = dataloader.StereoSet(self._input_file)
-    #
-    #     # Assume we are using GPT-2.
-    #     unconditional_start_token = "<|endoftext|>"
-    #     start_token = (
-    #         torch.tensor(self._tokenizer.encode(unconditional_start_token))
-    #         .to(device)
-    #         .unsqueeze(0)
-    #     )
-    #
-    #     # Get the unconditional initial token prompts if not using self-debiasing.
-    #     if not self._is_self_debias:
-    #         with torch.no_grad():
-    #             initial_token_probabilities = model(start_token)
-    #
-    #         # initial_token_probabilities.shape == (1, 1, vocab_size).
-    #         initial_token_probabilities = torch.softmax(
-    #             initial_token_probabilities[0], dim=-1
-    #         )
-    #
-    #         # Ensure that our batch size is 1 and that our inital token isn't split into subwords.
-    #         assert initial_token_probabilities.shape[0] == 1
-    #         assert initial_token_probabilities.shape[1] == 1
-    #
-    #     clusters = stereoset.get_intrasentence_examples()
-    #     predictions = []
-    #     for cluster in tqdm(clusters):
-    #         joint_sentence_probability = []
-    #         for sentence in cluster.sentences:
-    #             probabilities = {}
-    #
-    #             # Encode the sentence
-    #             tokens = self._tokenizer.encode(sentence.sentence)
-    #             tokens_tensor = torch.tensor(tokens).to(device).unsqueeze(0)
-    #
-    #             if self._is_self_debias:
-    #                 with torch.no_grad():
-    #                     debiasing_prefixes = [DEBIASING_PREFIXES[self._bias_type]]
-    #                     (
-    #                         logits,
-    #                         input_ids,
-    #                     ) = self._intrasentence_model.compute_loss_self_debiasing(
-    #                         tokens_tensor, debiasing_prefixes=debiasing_prefixes
-    #                     )
-    #
-    #                 # TODO Extract this to a global variable.
-    #                 # Lengths of prompts:
-    #                 # 13 for gender
-    #                 # 15 for race
-    #                 # 13 for religion
-    #                 bias_type_to_position = {
-    #                     "gender": 13,
-    #                     "race-color": 15,
-    #                     "religion": 13,
-    #                 }
-    #
-    #                 # Get the first token prob.
-    #                 probs = torch.softmax(
-    #                     logits[1, bias_type_to_position[self._bias_type] - 1], dim=-1
-    #                 )
-    #                 joint_sentence_probability = [probs[tokens[0]].item()]
-    #
-    #                 # Don't include the prompt.
-    #                 logits = logits[:, bias_type_to_position[self._bias_type] :, :]
-    #
-    #                 output = torch.softmax(logits, dim=-1)
-    #
-    #             else:
-    #                 with torch.no_grad():
-    #                     joint_sentence_probability = [
-    #                         initial_token_probabilities[0, 0, tokens[0]].item()
-    #                     ]
-    #
-    #                     output = torch.softmax(model(tokens_tensor)[0], dim=-1)
-    #
-    #             if self._is_self_debias:
-    #                 for idx in range(1, len(tokens)):
-    #                     joint_sentence_probability.append(
-    #                         output[1, idx - 1, tokens[idx]].item()
-    #                     )
-    #
-    #             else:
-    #                 for idx in range(1, len(tokens)):
-    #                     joint_sentence_probability.append(
-    #                         output[0, idx - 1, tokens[idx]].item()
-    #                     )
-    #
-    #             # Ensure that we have a probability on every token.
-    #             assert len(tokens) == len(joint_sentence_probability)
-    #
-    #             score = np.sum([np.log2(i) for i in joint_sentence_probability])
-    #             score /= len(joint_sentence_probability)
-    #             score = np.power(2, score)
-    #
-    #             probabilities["id"] = sentence.ID
-    #             probabilities["score"] = score
-    #
-    #             predictions.append(probabilities)
-    #
-    #     return predictions
 
     def count_parameters(self, model):
         return sum(p.numel() for p in model.parameters() if p.requires_grad)
