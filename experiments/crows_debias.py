@@ -28,22 +28,27 @@ parser.add_argument(
         "SentenceDebiasAlbertForMaskedLM",
         "SentenceDebiasRobertaForMaskedLM",
         "SentenceDebiasGPT2LMHeadModel",
+
         "INLPBertForMaskedLM",
         "INLPAlbertForMaskedLM",
         "INLPRobertaForMaskedLM",
         "INLPGPT2LMHeadModel",
+
         "CDABertForMaskedLM",
         "CDAAlbertForMaskedLM",
         "CDARobertaForMaskedLM",
         "CDAGPT2LMHeadModel",
+
         "DropoutBertForMaskedLM",
         "DropoutAlbertForMaskedLM",
         "DropoutRobertaForMaskedLM",
         "DropoutGPT2LMHeadModel",
+
         "SelfDebiasBertForMaskedLM",
         "SelfDebiasAlbertForMaskedLM",
         "SelfDebiasRobertaForMaskedLM",
         "SelfDebiasGPT2LMHeadModel",
+        "SelfDebiasLlamaLMHeadModel", # For llama 2 debiased models
     ],
     help="Model to evalute (e.g., SentenceDebiasBertForMaskedLM). Typically, these "
     "correspond to a HuggingFace class.",
@@ -53,7 +58,7 @@ parser.add_argument(
     action="store",
     type=str,
     default="bert-base-uncased",
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
+    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "meta-llama/Llama-2-7b-chat-hf"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )
@@ -133,9 +138,14 @@ if __name__ == "__main__":
         bias_type=args.bias_type,
         is_generative=_is_generative(args.model),  # Affects model scoring.
         is_self_debias=_is_self_debias(args.model),
+        model_name_or_path=args.model_name_or_path, # Added to determine unconditional start token
     )
     results = runner()
     print(f"Metric: {results}")
+
+    # Modified
+    # Remove any slash from file experiment_id
+    experiment_id = experiment_id.replace("/", "_")
 
     os.makedirs(f"{args.persistent_dir}/results/crows", exist_ok=True)
     with open(f"{args.persistent_dir}/results/crows/{experiment_id}.json", "w") as f:

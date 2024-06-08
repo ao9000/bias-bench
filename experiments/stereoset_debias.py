@@ -49,7 +49,7 @@ parser.add_argument(
         "SelfDebiasBertForMaskedLM",
         "SelfDebiasAlbertForMaskedLM",
         "SelfDebiasRobertaForMaskedLM",
-        "SelfDebiasLlamaLMHeadModel",
+        "SelfDebiasLlamaLMHeadModel", # Added for self debiasing Llama model
     ],
     help="Model to evalute (e.g., SentenceDebiasBertForMaskedLM).",
 )
