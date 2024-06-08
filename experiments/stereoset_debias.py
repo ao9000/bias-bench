@@ -102,6 +102,16 @@ parser.add_argument(
     help="RNG seed. Used for logging in experiment ID.",
 )
 
+def get_debias_method():
+    if "SelfDebias".lower() in args.model.lower():
+        return "SelfDebias"
+    elif "INLP".lower() in args.model.lower():
+        return "INLP"
+    elif "CDA".lower() in args.model.lower():
+        return "CDA"
+    elif "Dropout".lower() in args.model.lower():
+        return "Dropout"
+
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -164,8 +174,11 @@ if __name__ == "__main__":
     )
     results = runner()
 
+    # Remove any slash from file experiment_id
+    experiment_id = experiment_id.replace("/", "_")
+
     os.makedirs(f"{args.persistent_dir}/results/stereoset", exist_ok=True)
     with open(
-        f"{args.persistent_dir}/results/stereoset/{experiment_id}.json", "w"
+        f"{args.persistent_dir}/results/stereoset_{get_debias_method()}/{experiment_id}.json", "w"
     ) as f:
         json.dump(results, f, indent=2)
