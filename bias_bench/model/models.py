@@ -3,7 +3,7 @@ from functools import partial
 import torch
 import transformers
 
-from bias_bench.debias.self_debias.modeling import GPT2Wrapper
+from bias_bench.debias.self_debias.modeling import GPT2Wrapper, Llama2Wrapper
 from bias_bench.debias.self_debias.modeling import MaskedLMWrapper
 
 ################################ Modified ###############################################################
@@ -42,6 +42,11 @@ class LlamaForCausalLM:
     def __new__(self, model_name_or_path):
         return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
                                                              output_hidden_states=True).bfloat16()
+class SelfDebiasLlamaLMHeadModel:
+    def __new__(self, model_name_or_path):
+        model = Llama2Wrapper(model_name_or_path, use_cuda=False)
+        return model
+
 ############################################################################################################
 
 

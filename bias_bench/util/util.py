@@ -27,6 +27,7 @@ def _is_generative(model):
         "DropoutGPT2LMHeadModel",
         "SelfDebiasGPT2LMHeadModel",
         "LlamaForCausalLM", # For llama 2 models
+        "SelfDebiasLlamaLMHeadModel", # For llama 2 models (Self-Debias)
         "PhiForCausalLM", # For phi models
         "AutoModelForCausalLM", # For other huggingface models
     ]
@@ -39,4 +40,5 @@ def _is_self_debias(model):
         "SelfDebiasBertForMaskedLM",
         "SelfDebiasAlbertForMaskedLM",
         "SelfDebiasRobertaForMaskedLM",
+        "SelfDebiasLlamaLMHeadModel",
     ]

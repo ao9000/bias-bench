@@ -92,7 +92,7 @@ if __name__ == "__main__":
         "--models",
         type=str,
         nargs="+",
-        default=["gpt2", "gpt2-medium", "gpt2-large", "gpt2-xl"],
+        default=["gpt2", "gpt2-medium", "gpt2-large", "gpt2-xl", "meta-llama/Llama-2-7b-chat-hf"],
         help="The specific models to run self-debiasing experiments for (e.g., 'gpt2-medium gpt2-large')",
     )
     parser.add_argument(
