@@ -42,9 +42,19 @@ class LlamaForCausalLM:
     def __new__(self, model_name_or_path):
         return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
                                                              output_hidden_states=True).bfloat16()
-class SelfDebiasLlamaLMHeadModel:
+class SelfDebiasLlama2LMHeadModel:
     def __new__(self, model_name_or_path):
         model = Llama2Wrapper(model_name_or_path, use_cuda=False)
+        return model
+
+class CDAPhi2LMHeadModel:
+    def __new__(self, model_name_or_path):
+        model = transformers.PhiForCausalLM.from_pretrained(model_name_or_path)
+        return model
+
+class CDALlama2LMHeadModel:
+    def __new__(self, model_name_or_path):
+        model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path)
         return model
 
 ############################################################################################################

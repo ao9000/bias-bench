@@ -30,6 +30,8 @@ def _is_generative(model):
         "SelfDebiasLlamaLMHeadModel", # For llama 2 models (Self-Debias)
         "PhiForCausalLM", # For phi models
         "AutoModelForCausalLM", # For other huggingface models
+        "CDAPhi2LMHeadModel", # For phi models
+        "CDALlama2LMHeadModel", # For llama 2 models
     ]
 
 
