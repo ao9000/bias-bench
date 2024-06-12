@@ -34,6 +34,11 @@ from functools import partial
 import datasets
 from datasets import load_dataset
 
+# Modified to support quantization bitsnbytes
+import torch
+from peft import LoraConfig, get_peft_model
+from trl import SFTConfig, SFTTrainer
+
 import transformers
 from transformers import (
     CONFIG_MAPPING,
@@ -46,6 +51,7 @@ from transformers import (
     TrainingArguments,
     default_data_collator,
     set_seed,
+    BitsAndBytesConfig,
 )
 from transformers.testing_utils import CaptureLogger
 from transformers.trainer_utils import get_last_checkpoint
@@ -67,12 +73,17 @@ logger = logging.getLogger(__name__)
 MODEL_CONFIG_CLASSES = list(MODEL_FOR_CAUSAL_LM_MAPPING.keys())
 MODEL_TYPES = tuple(conf.model_type for conf in MODEL_CONFIG_CLASSES)
 
-
 @dataclass
 class ModelArguments:
     """
     Arguments pertaining to which model/config/tokenizer we are going to fine-tune, or train from scratch.
     """
+
+    # Modified to support quantization bitsnbytes
+    bnb: bool = field(
+        default=False,
+        metadata={"help": "Whether to use Bits and Bytes quantization."},
+    )
 
     model_name_or_path: Optional[str] = field(
         default=None,
@@ -430,7 +441,26 @@ def main():
     tokenizer.pad_token = tokenizer.eos_token
     config.pad_token_id = config.eos_token_id
 
+    # Modified to support quantization bitsnbytes
     if model_args.model_name_or_path:
+        bnb_config = None
+        if model_args.bnb:
+            print("Quantization enabled")
+            bnb_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=torch.bfloat16,
+            )
+            peft_config = LoraConfig(
+                r=8,
+                lora_alpha=16,
+                lora_dropout=0.05,
+                target_modules=["q_proj", "v_proj"],
+                bias="none",
+                task_type="CAUSAL_LM",
+            )
+            tokenizer.padding_side = "right"
+
         model = AutoModelForCausalLM.from_pretrained(
             model_args.model_name_or_path,
             from_tf=bool(".ckpt" in model_args.model_name_or_path),
@@ -438,6 +468,8 @@ def main():
             cache_dir=model_args.cache_dir,
             revision=model_args.model_revision,
             use_auth_token=True if model_args.use_auth_token else None,
+            device_map="auto",
+            quantization_config=bnb_config,
         )
     else:
         model = AutoModelForCausalLM.from_config(config)
@@ -708,16 +740,31 @@ def main():
         if data_args.max_eval_samples is not None:
             eval_dataset = eval_dataset.select(range(data_args.max_eval_samples))
 
-    # Initialize our Trainer
-    trainer = Trainer(
-        model=model,
-        args=training_args,
-        train_dataset=train_dataset if training_args.do_train else None,
-        eval_dataset=eval_dataset if training_args.do_eval else None,
-        tokenizer=tokenizer,
-        # Data collator will default to DataCollatorWithPadding, so we change it.
-        data_collator=default_data_collator,
-    )
+    # Modified to support quantization bitsnbytes
+    if model_args.bnb:
+        # Initialize the SFTTrainer
+        trainer = SFTTrainer(
+            model=model,
+            args=training_args,
+            train_dataset=train_dataset if training_args.do_train else None,
+            eval_dataset=eval_dataset if training_args.do_eval else None,
+            tokenizer=tokenizer,
+            data_collator=default_data_collator,
+            peft_config=peft_config,
+            max_seq_length=tokenizer.model_max_length,
+            formatting_func=None,
+        )
+    else:
+        # Initialize our Trainer
+        trainer = Trainer(
+            model=model,
+            args=training_args,
+            train_dataset=train_dataset if training_args.do_train else None,
+            eval_dataset=eval_dataset if training_args.do_eval else None,
+            tokenizer=tokenizer,
+            # Data collator will default to DataCollatorWithPadding, so we change it.
+            data_collator=default_data_collator,
+        )
 
     # Training
     if training_args.do_train:
