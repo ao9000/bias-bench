@@ -80,9 +80,9 @@ class ModelArguments:
     """
 
     # Modified to support quantization bitsnbytes
-    bnb: bool = field(
+    lora: bool = field(
         default=False,
-        metadata={"help": "Whether to use Bits and Bytes quantization."},
+        metadata={"help": "Whether to use Lora Bits and Bytes quantization."},
     )
 
     model_name_or_path: Optional[str] = field(
@@ -444,7 +444,7 @@ def main():
     # Modified to support quantization bitsnbytes
     if model_args.model_name_or_path:
         bnb_config = None
-        if model_args.bnb:
+        if model_args.lora:
             print("Quantization enabled")
             bnb_config = BitsAndBytesConfig(
                 load_in_4bit=True,
@@ -741,7 +741,7 @@ def main():
             eval_dataset = eval_dataset.select(range(data_args.max_eval_samples))
 
     # Modified to support quantization bitsnbytes
-    if model_args.bnb:
+    if model_args.lora:
         # Initialize the SFTTrainer
         trainer = SFTTrainer(
             model=model,
