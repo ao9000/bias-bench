@@ -1,0 +1,65 @@
+{
+    "age": {
+        "Anti-stereotype score": 64.29,
+        "Metric score": 51.72,
+        "Num. neutral": 0.0,
+        "Stereotype score": 49.32,
+        "Total examples": 87
+    },
+    "disability": {
+        "Anti-stereotype score": 66.67,
+        "Metric score": 56.67,
+        "Num. neutral": 0.0,
+        "Stereotype score": 56.14,
+        "Total examples": 60
+    },
+    "gender": {
+        "Anti-stereotype score": 62.14,
+        "Metric score": 56.87,
+        "Num. neutral": 0.0,
+        "Stereotype score": 53.46,
+        "Total examples": 262
+    },
+    "nationality": {
+        "Anti-stereotype score": 45.45,
+        "Metric score": 45.91,
+        "Num. neutral": 0.0,
+        "Stereotype score": 45.95,
+        "Total examples": 159
+    },
+    "physical-appearance": {
+        "Anti-stereotype score": 45.45,
+        "Metric score": 57.14,
+        "Num. neutral": 0.0,
+        "Stereotype score": 59.62,
+        "Total examples": 63
+    },
+    "race-color": {
+        "Anti-stereotype score": 62.79,
+        "Metric score": 59.69,
+        "Num. neutral": 0.0,
+        "Stereotype score": 59.41,
+        "Total examples": 516
+    },
+    "religion": {
+        "Anti-stereotype score": 66.67,
+        "Metric score": 62.86,
+        "Num. neutral": 0.0,
+        "Stereotype score": 62.63,
+        "Total examples": 105
+    },
+    "sexual-orientation": {
+        "Anti-stereotype score": 58.33,
+        "Metric score": 76.19,
+        "Num. neutral": 0.0,
+        "Stereotype score": 79.17,
+        "Total examples": 84
+    },
+    "socioeconomic": {
+        "Anti-stereotype score": 53.33,
+        "Metric score": 63.95,
+        "Num. neutral": 0.0,
+        "Stereotype score": 64.97,
+        "Total examples": 172
+    }
+}

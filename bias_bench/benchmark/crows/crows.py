@@ -71,6 +71,9 @@ class CrowSPairsRunner:
                 results = self._likelihood_score_generative()
             else:
                 results = self._likelihood_score()
+
+            # Modified
+            results = {self._bias_type: results}
             return results
         else:
             # Evaluate all bias types.
@@ -198,7 +201,16 @@ class CrowSPairsRunner:
         print("=" * 100)
         print()
 
-        return round((stereo_score + antistereo_score) / N * 100, 2)
+        # Modified
+        results = {
+            "Total examples": N,
+            "Metric score": round((stereo_score + antistereo_score) / N * 100, 2),
+            "Stereotype score": round(stereo_score / total_stereo * 100, 2),
+            "Anti-stereotype score": round(antistereo_score / total_antistereo * 100, 2) if antistereo_score != 0 else None,
+            "Num. neutral": round(neutral / N * 100, 2),
+        }
+        return results
+        # return round((stereo_score + antistereo_score) / N * 100, 2)
 
     def _likelihood_score_generative(self):
         df_data = self._read_data(self._input_file)
@@ -241,8 +253,8 @@ class CrowSPairsRunner:
 
                 sent1, sent2 = data["sent1"], data["sent2"]
 
-                sent1_token_ids = self._tokenizer.encode(sent1)
-                sent2_token_ids = self._tokenizer.encode(sent2)
+                sent1_token_ids = self._tokenizer.encode(sent1, add_special_tokens=False)
+                sent2_token_ids = self._tokenizer.encode(sent2, add_special_tokens=False)
 
                 score1 = self._joint_log_probability(sent1_token_ids, unconditional_start_token)
                 score2 = self._joint_log_probability(sent2_token_ids, unconditional_start_token)
@@ -302,7 +314,16 @@ class CrowSPairsRunner:
         print("=" * 100)
         print()
 
-        return round((stereo_score + antistereo_score) / N * 100, 2)
+        # Pack all values into dict
+        results = {
+            "Total examples": N,
+            "Metric score": round((stereo_score + antistereo_score) / N * 100, 2),
+            "Stereotype score": round(stereo_score / total_stereo * 100, 2),
+            "Anti-stereotype score": round(antistereo_score / total_antistereo * 100, 2) if antistereo_score != 0 else None,
+            "Num. neutral": round(neutral / N * 100, 2),
+        }
+        return results
+        # return round((stereo_score + antistereo_score) / N * 100, 2)
 
     def _joint_log_probability(self, tokens, unconditional_start_token):
         start_token = (
