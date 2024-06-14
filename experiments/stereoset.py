@@ -46,7 +46,12 @@ parser.add_argument(
     type=str,
     default="bert-base-uncased",
     # choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "meta-llama/Llama-2-7b-chat-hf", "microsoft/phi-2", "microsoft/Phi-3-mini-4k-instruct"],
+    choices=["bert-base-uncased",
+             "albert-base-v2",
+             "roberta-base",
+             "gpt2",
+             "meta-llama/Llama-2-7b-hf",
+             "microsoft/phi-2"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )

@@ -207,7 +207,7 @@ class StereoSetRunner:
         # Assume we are using GPT-2.
         # unconditional_start_token = "<|endoftext|>"
         start_token = (
-            torch.tensor(self._tokenizer.encode(unconditional_start_token, add_special_tokens=True))
+            torch.tensor(self._tokenizer.encode(unconditional_start_token, add_special_tokens=False))
             .to(device)
             .unsqueeze(0)
         )
