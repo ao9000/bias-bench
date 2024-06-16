@@ -49,7 +49,8 @@ parser.add_argument(
         "SelfDebiasBertForMaskedLM",
         "SelfDebiasAlbertForMaskedLM",
         "SelfDebiasRobertaForMaskedLM",
-        "SelfDebiasLlamaLMHeadModel", # Added for self debiasing Llama model
+        "SelfDebiasLlama2LMHeadModel", # Added for self debiasing Llama model
+        "SelfDebiasPhi2LMHeadModel", # Added for self debiasing Phi model
     ],
     help="Model to evalute (e.g., SentenceDebiasBertForMaskedLM).",
 )
@@ -58,7 +59,12 @@ parser.add_argument(
     action="store",
     type=str,
     default="bert-base-uncased",
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "meta-llama/Llama-2-7b-chat-hf"],
+    choices=["bert-base-uncased",
+             "albert-base-v2",
+             "roberta-base",
+             "gpt2",
+             "microsoft/phi-2",
+             "meta-llama/Llama-2-7b-hf"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )
@@ -91,7 +97,8 @@ parser.add_argument(
     "--bias_type",
     action="store",
     type=str,
-    choices=["gender", "religion", "race"],
+    choices=["race-color", "gender", "socioeconomic", "sexual-orientation", "religion", "age", "nationality", "disability", "physical-appearance"],
+    default=None,
     help="The type of bias to mitigate.",
 )
 parser.add_argument(
