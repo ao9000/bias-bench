@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 
-from bias_bench.util.util import start_token_mapper
+from bias_bench.util.util import start_token_mapper, get_self_debias_prefix_token_count
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -356,7 +356,10 @@ class CrowSPairsRunner:
                 # 13 for gender
                 # 15 for race
                 # 13 for religion
-                bias_type_to_position = {"gender": 13, "race-color": 15, "religion": 13}
+                # bias_type_to_position = {"gender": 13, "race-color": 15, "religion": 13}
+                # Modified
+                # Get token length for debiasing prefix, token length differs for each model tokenizer
+                bias_type_to_position = get_self_debias_prefix_token_count(self._model_name_or_path)
 
                 # Get the first token prob.
                 probs = torch.softmax(

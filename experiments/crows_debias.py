@@ -50,7 +50,8 @@ parser.add_argument(
         "SelfDebiasAlbertForMaskedLM",
         "SelfDebiasRobertaForMaskedLM",
         "SelfDebiasGPT2LMHeadModel",
-        "SelfDebiasLlamaLMHeadModel", # For llama 2 debiased models
+        "SelfDebiasLlama2LMHeadModel", # For llama 2 debiased models
+        "SelfDebiasPhi2LMHeadModel", # For phi 2 debiased models
     ],
     help="Model to evalute (e.g., SentenceDebiasBertForMaskedLM). Typically, these "
     "correspond to a HuggingFace class.",
@@ -60,7 +61,7 @@ parser.add_argument(
     action="store",
     type=str,
     default="bert-base-uncased",
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "microsoft/phi-2", "meta-llama/Llama-2-7b-chat-hf"],
+    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "microsoft/phi-2", "meta-llama/Llama-2-7b-hf"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )
@@ -83,12 +84,23 @@ parser.add_argument(
     help="Path to saved ContextDebias, CDA, or Dropout model checkpoint.",
 )
 parser.add_argument(
-    "--bias_type",
-    action="store",
-    default="gender",
-    choices=["gender", "race", "religion"],
-    help="Determines which CrowS-Pairs dataset split to evaluate against.",
+   "--bias_type",
+   action="store",
+   default="gender",
+   choices=["race-color", "gender", "socioeconomic", "sexual-orientation", "religion", "age", "nationality", "disability", "physical-appearance"],
+   help="Determines which CrowS-Pairs dataset split to evaluate against.",
 )
+
+
+def get_debias_method():
+    if "SelfDebias".lower() in args.model.lower():
+        return "SelfDebias"
+    elif "INLP".lower() in args.model.lower():
+        return "INLP"
+    elif "CDA".lower() in args.model.lower():
+        return "CDA"
+    elif "Dropout".lower() in args.model.lower():
+        return "Dropout"
 
 
 if __name__ == "__main__":
@@ -150,5 +162,6 @@ if __name__ == "__main__":
     experiment_id = experiment_id.replace("/", "_")
 
     os.makedirs(f"{args.persistent_dir}/results/crows", exist_ok=True)
-    with open(f"{args.persistent_dir}/results/crows/{experiment_id}.json", "w") as f:
-        json.dump(results, f)
+    with open(f"{args.persistent_dir}/results/crows_{get_debias_method()}/{experiment_id}.json", "w") as f:
+        json.dump(results, f, indent=4, sort_keys=True)
+        # json.dump(results, f)

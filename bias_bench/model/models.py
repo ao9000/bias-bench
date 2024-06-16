@@ -3,7 +3,7 @@ from functools import partial
 import torch
 import transformers
 
-from bias_bench.debias.self_debias.modeling import GPT2Wrapper, Llama2Wrapper
+from bias_bench.debias.self_debias.modeling import GPT2Wrapper, Llama2Wrapper, Phi2Wrapper
 from bias_bench.debias.self_debias.modeling import MaskedLMWrapper
 
 ################################ Modified ###############################################################
@@ -42,19 +42,28 @@ class LlamaForCausalLM:
     def __new__(self, model_name_or_path):
         return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
                                                              output_hidden_states=True).bfloat16()
+
+# Self debias models
 class SelfDebiasLlama2LMHeadModel:
     def __new__(self, model_name_or_path):
         model = Llama2Wrapper(model_name_or_path, use_cuda=True)
         return model
 
+class SelfDebiasPhi2LMHeadModel:
+    def __new__(self, model_name_or_path):
+        model = Phi2Wrapper(model_name_or_path, use_cuda=True)
+        return model
+
+
+# CDA Models
 class CDAPhi2LMHeadModel:
     def __new__(self, model_name_or_path):
-        model = transformers.PhiForCausalLM.from_pretrained(model_name_or_path)
+        model = transformers.PhiForCausalLM.from_pretrained(model_name_or_path).bfloat16()
         return model
 
 class CDALlama2LMHeadModel:
     def __new__(self, model_name_or_path):
-        model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path)
+        model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path).bfloat16()
         return model
 
 ############################################################################################################
