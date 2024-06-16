@@ -44,7 +44,7 @@ class LlamaForCausalLM:
                                                              output_hidden_states=True).bfloat16()
 class SelfDebiasLlama2LMHeadModel:
     def __new__(self, model_name_or_path):
-        model = Llama2Wrapper(model_name_or_path, use_cuda=False)
+        model = Llama2Wrapper(model_name_or_path, use_cuda=True)
         return model
 
 class CDAPhi2LMHeadModel:

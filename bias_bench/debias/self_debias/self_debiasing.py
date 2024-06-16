@@ -8,7 +8,7 @@ from typing import List, Dict
 import torch
 from tqdm import tqdm
 
-from bias_bench.debias.self_debias.modeling import GPT2Wrapper, Llama2Wrapper
+from bias_bench.debias.self_debias.modeling import GPT2Wrapper, Llama2Wrapper, Phi2Wrapper
 from bias_bench.debias.self_debias.io_utils import load_prompts, ModelOutput, Prompt
 from bias_bench.debias.self_debias.perspective_api import PerspectiveApiScorer
 
@@ -92,7 +92,7 @@ if __name__ == "__main__":
         "--models",
         type=str,
         nargs="+",
-        default=["gpt2", "gpt2-medium", "gpt2-large", "gpt2-xl", "meta-llama/Llama-2-7b-chat-hf"],
+        default=["gpt2", "gpt2-medium", "gpt2-large", "gpt2-xl", "microsoft/phi-2", "meta-llama/Llama-2-7b-hf"],
         help="The specific models to run self-debiasing experiments for (e.g., 'gpt2-medium gpt2-large')",
     )
     parser.add_argument(
@@ -203,6 +203,8 @@ if __name__ == "__main__":
             wrapper = GPT2Wrapper(model_name=model_name)
         elif "llama" in model_name.lower():
             wrapper = Llama2Wrapper(model_name=model_name)
+        elif "phi" in model_name.lower():
+            wrapper = Phi2Wrapper(model_name=model_name)
         else:
             raise ValueError(f"Unknown model name: {model_name}")
 

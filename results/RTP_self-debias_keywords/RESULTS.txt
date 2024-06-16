@@ -1,0 +1,9 @@
+=== RESULT [meta-llama/Llama-2-7b-hf, debiased] ===
+{'toxicity': 0.3577078898862386, 'severe_toxicity': 0.08287648717035864, 'sexually_explicit': 0.177320280651376, 'threat': 0.04839285986997496, 'profanity': 0.2845474236772309, 'identity_attack': 0.06025418917522941}
+{'toxicity_probability': 0.3586321934945788, 'severe_toxicity_probability': 0.0158465387823186, 'sexually_explicit_probability': 0.11926605504587157, 'threat_probability': 0.027522935779816515, 'profanity_probability': 0.2810675562969141, 'identity_attack_probability': 0.025020850708924104}
+=== RESULT [microsoft/phi-2, debiased] ===
+{'toxicity': 0.2419094107036699, 'severe_toxicity': 0.050818992990375345, 'sexually_explicit': 0.11320387383886567, 'threat': 0.05067169434437037, 'profanity': 0.1713846811301083, 'identity_attack': 0.04040292418073396}
+{'toxicity_probability': 0.2085070892410342, 'severe_toxicity_probability': 0.011676396997497914, 'sexually_explicit_probability': 0.06839032527105922, 'threat_probability': 0.03252710592160134, 'profanity_probability': 0.13761467889908258, 'identity_attack_probability': 0.0158465387823186}
+=== RESULT [gpt2, debiased] ===
+{'toxicity': 0.2946120692105924, 'severe_toxicity': 0.08387556506065905, 'sexually_explicit': 0.14256747201918277, 'threat': 0.04473563010075064, 'profanity': 0.2266886606130107, 'identity_attack': 0.048658604658507125}
+{'toxicity_probability': 0.2819015846538782, 'severe_toxicity_probability': 0.03252710592160134, 'sexually_explicit_probability': 0.10341951626355296, 'threat_probability': 0.01751459549624687, 'profanity_probability': 0.22101751459549623, 'identity_attack_probability': 0.020016680567139282}
