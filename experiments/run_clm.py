@@ -451,11 +451,16 @@ def main():
                 bnb_4bit_quant_type="nf4",
                 bnb_4bit_compute_dtype=torch.bfloat16,
             )
+
+            # Research has shown that to best replicate the performance of full training
+            # we should train all layers with lora
+            # At the same time, rank will not matter when training all layers, but 16 is a start considering
+            # Bias tuning is not a simple downstream task
             peft_config = LoraConfig(
                 r=8,
                 lora_alpha=16,
-                lora_dropout=0.05,
-                target_modules=["q_proj", "v_proj"],
+                lora_dropout=0.1,
+                target_modules=["gate_proj", "down_proj", "up_proj", "q_proj", "v_proj", "k_proj", "o_proj"],
                 bias="none",
                 task_type="CAUSAL_LM",
             )
