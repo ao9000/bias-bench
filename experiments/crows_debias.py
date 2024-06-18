@@ -101,6 +101,8 @@ def get_debias_method():
         return "CDA"
     elif "Dropout".lower() in args.model.lower():
         return "Dropout"
+    elif "SentenceDebias".lower() in args.model.lower():
+        return "SentenceDebias"
 
 
 if __name__ == "__main__":

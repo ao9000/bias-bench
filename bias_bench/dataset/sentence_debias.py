@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 # The original implementation uses SST, POM, WikiText-2, Reddit, Meld, and
 # News-200.
+# DATASET_NAMES = ["wikipedia-2.5_tiny"]
 DATASET_NAMES = ["wikipedia-2.5"]
 
 
@@ -148,7 +149,7 @@ class _SentenceDebiasDataset:
         self._bias_type = bias_type
         self._augment_func = self._bias_type_to_func[self._bias_type]
 
-        self._root_data_dir = f"{self._persistent_dir}/data/text"
+        self._root_data_dir = f"{self._persistent_dir}/data/"
 
         with open(f"{self._persistent_dir}/data/bias_attribute_words.json", "r") as f:
             self._attribute_words = json.load(f)[self._bias_type]

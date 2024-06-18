@@ -7,6 +7,9 @@ from bias_bench.debias.self_debias.modeling import GPT2Wrapper, Llama2Wrapper, P
 from bias_bench.debias.self_debias.modeling import MaskedLMWrapper
 
 ################################ Modified ###############################################################
+from transformers import (
+    BitsAndBytesConfig,
+)
 from pathlib import Path
 import yaml
 import bias_bench
@@ -43,6 +46,33 @@ class LlamaForCausalLM:
         return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
                                                              output_hidden_states=True).bfloat16()
 
+# Quantized versions of the models
+# class PhiForCausalLM_Quantized:
+#     def __new__(self, model_name_or_path):
+#         bnb_config = BitsAndBytesConfig(
+#             load_in_4bit=True,
+#             bnb_4bit_quant_type="nf4",
+#             bnb_4bit_compute_dtype=torch.bfloat16,
+#             bnb_4bit_use_double_quant=True,
+#         )
+#         return transformers.PhiForCausalLM.from_pretrained(model_name_or_path,
+#                                                            return_dict=True,
+#                                                            output_hidden_states=True,
+#                                                            quantization_config=bnb_config,
+#                                                            device_map="auto")
+# class LlamaForCausalLM_Quantized:
+#     def __new__(self, model_name_or_path):
+#         bnb_config = BitsAndBytesConfig(
+#             load_in_4bit=True,
+#             bnb_4bit_quant_type="nf4",
+#             bnb_4bit_compute_dtype=torch.bfloat16,
+#         )
+#         return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path,
+#                                                              return_dict=True,
+#                                                              output_hidden_states=True,
+#                                                              quantization_config=bnb_config,
+#                                                              device_map="auto")
+
 # Self debias models
 class SelfDebiasLlama2LMHeadModel:
     def __new__(self, model_name_or_path):
@@ -65,6 +95,17 @@ class CDALlama2LMHeadModel:
     def __new__(self, model_name_or_path):
         model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path).bfloat16()
         return model
+
+# Sentence Debias Models
+class PhiForCausalLM_NonBFloat16:
+    def __new__(self, model_name_or_path):
+        return transformers.PhiForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
+                                                           output_hidden_states=True)
+
+class LlamaForCausalLM_NonBFloat16:
+    def __new__(self, model_name_or_path):
+        return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
+                                                             output_hidden_states=True)
 
 ############################################################################################################
 

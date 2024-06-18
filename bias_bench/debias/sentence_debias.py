@@ -49,16 +49,39 @@ def compute_gender_subspace(data, model, tokenizer, batch_size=32):
         with torch.no_grad():
             # Compute average representation from last layer.
             # embedding_male.shape == (batch_size, 128, 768).
+
+            # Modified
+            # Llama models do not return the last_hidden_state key in the output dictionary.
+            # embedding_male = model(
+            #     input_ids=male_input_ids, attention_mask=male_attention_mask
+            # )["last_hidden_state"]
             embedding_male = model(
                 input_ids=male_input_ids, attention_mask=male_attention_mask
-            )["last_hidden_state"]
+            )
+            if 'last_hidden_state' in embedding_male:
+                embedding_male = embedding_male["last_hidden_state"]
+            else:
+                embedding_male = embedding_male['hidden_states'][-1]
+
+
             embedding_male *= male_attention_mask.unsqueeze(-1)
             embedding_male = embedding_male.sum(dim=1)
             embedding_male /= male_attention_mask.sum(dim=1, keepdims=True)
 
+            # Modified
+            # Llama models do not return the last_hidden_state key in the output dictionary.
+            # embedding_female = model(
+            #     input_ids=female_input_ids, attention_mask=female_attention_mask
+            # )["last_hidden_state"]
             embedding_female = model(
                 input_ids=female_input_ids, attention_mask=female_attention_mask
-            )["last_hidden_state"]
+            )
+            if 'last_hidden_state' in embedding_female:
+                embedding_female = embedding_female["last_hidden_state"]
+            else:
+                embedding_female = embedding_female['hidden_states'][-1]
+
+        
             embedding_female *= female_attention_mask.unsqueeze(-1)
             embedding_female = embedding_female.sum(dim=1)
             embedding_female /= female_attention_mask.sum(dim=1, keepdims=True)
@@ -140,23 +163,48 @@ def compute_race_subspace(data, model, tokenizer, batch_size=32):
         r3_attention_mask = inputs_r3["attention_mask"].to(device)
 
         with torch.no_grad():
+            # embedding_r1 = model(
+            #     input_ids=r1_input_ids, attention_mask=r1_attention_mask
+            # )["last_hidden_state"]
             embedding_r1 = model(
                 input_ids=r1_input_ids, attention_mask=r1_attention_mask
-            )["last_hidden_state"]
+            )
+            if 'last_hidden_state' in embedding_r1:
+                embedding_r1 = embedding_r1["last_hidden_state"]
+            else:
+                embedding_r1 = embedding_r1['hidden_states'][-1]
+
             embedding_r1 *= r1_attention_mask.unsqueeze(-1)
             embedding_r1 = embedding_r1.sum(dim=1)
             embedding_r1 /= r1_attention_mask.sum(dim=1, keepdims=True)
 
+            # embedding_r2 = model(
+            #     input_ids=r2_input_ids, attention_mask=r2_attention_mask
+            # )["last_hidden_state"]
             embedding_r2 = model(
                 input_ids=r2_input_ids, attention_mask=r2_attention_mask
-            )["last_hidden_state"]
+            )
+            if 'last_hidden_state' in embedding_r2:
+                embedding_r2 = embedding_r2["last_hidden_state"]
+            else:
+                embedding_r2 = embedding_r2['hidden_states'][-1]
+
+
             embedding_r2 *= r2_attention_mask.unsqueeze(-1)
             embedding_r2 = embedding_r2.sum(dim=1)
             embedding_r2 /= r2_attention_mask.sum(dim=1, keepdims=True)
 
+            # embedding_r3 = model(
+            #     input_ids=r3_input_ids, attention_mask=r3_attention_mask
+            # )["last_hidden_state"]
             embedding_r3 = model(
                 input_ids=r3_input_ids, attention_mask=r3_attention_mask
-            )["last_hidden_state"]
+            )
+            if 'last_hidden_state' in embedding_r3:
+                embedding_r3 = embedding_r3["last_hidden_state"]
+            else:
+                embedding_r3 = embedding_r3['hidden_states'][-1]
+
             embedding_r3 *= r3_attention_mask.unsqueeze(-1)
             embedding_r3 = embedding_r3.sum(dim=1)
             embedding_r3 /= r3_attention_mask.sum(dim=1, keepdims=True)
@@ -242,23 +290,49 @@ def compute_religion_subspace(data, model, tokenizer, batch_size=32):
         r3_attention_mask = inputs_r3["attention_mask"].to(device)
 
         with torch.no_grad():
+            # embedding_r1 = model(
+            #     input_ids=r1_input_ids, attention_mask=r1_attention_mask
+            # )["last_hidden_state"]
             embedding_r1 = model(
                 input_ids=r1_input_ids, attention_mask=r1_attention_mask
-            )["last_hidden_state"]
+            )
+            if 'last_hidden_state' in embedding_r1:
+                embedding_r1 = embedding_r1["last_hidden_state"]
+            else:
+                embedding_r1 = embedding_r1['hidden_states'][-1]
+
             embedding_r1 *= r1_attention_mask.unsqueeze(-1)
             embedding_r1 = embedding_r1.sum(dim=1)
             embedding_r1 /= r1_attention_mask.sum(dim=1, keepdims=True)
 
+            # embedding_r2 = model(
+            #     input_ids=r2_input_ids, attention_mask=r2_attention_mask
+            # )["last_hidden_state"]
             embedding_r2 = model(
                 input_ids=r2_input_ids, attention_mask=r2_attention_mask
-            )["last_hidden_state"]
+            )
+            if 'last_hidden_state' in embedding_r2:
+                embedding_r2 = embedding_r2["last_hidden_state"]
+            else:
+                embedding_r2 = embedding_r2['hidden_states'][-1]
+
+
             embedding_r2 *= r2_attention_mask.unsqueeze(-1)
             embedding_r2 = embedding_r2.sum(dim=1)
             embedding_r2 /= r2_attention_mask.sum(dim=1, keepdims=True)
 
+            # embedding_r3 = model(
+            #     input_ids=r3_input_ids, attention_mask=r3_attention_mask
+            # )["last_hidden_state"]
             embedding_r3 = model(
                 input_ids=r3_input_ids, attention_mask=r3_attention_mask
-            )["last_hidden_state"]
+            )
+            if 'last_hidden_state' in embedding_r3:
+                embedding_r3 = embedding_r3["last_hidden_state"]
+            else:
+                embedding_r3 = embedding_r3['hidden_states'][-1]
+
+
             embedding_r3 *= r3_attention_mask.unsqueeze(-1)
             embedding_r3 = embedding_r3.sum(dim=1)
             embedding_r3 /= r3_attention_mask.sum(dim=1, keepdims=True)

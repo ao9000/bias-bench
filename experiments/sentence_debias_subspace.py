@@ -29,7 +29,14 @@ parser.add_argument(
     action="store",
     type=str,
     default="BertModel",
-    choices=["BertModel", "AlbertModel", "RobertaModel", "GPT2Model"],
+    choices=["BertModel",
+             "AlbertModel",
+             "RobertaModel",
+             "GPT2Model",
+             "PhiForCausalLM_NonBFloat16",
+             "LlamaForCausalLM_NonBFloat16",
+             "PhiForCausalLM_Quantized"
+             ],
     help="Model (e.g., BertModel) to compute the SentenceDebias subspace for. "
     "Typically, these correspond to a HuggingFace class.",
 )
@@ -38,7 +45,12 @@ parser.add_argument(
     action="store",
     type=str,
     default="bert-base-uncased",
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
+    choices=["bert-base-uncased",
+             "albert-base-v2",
+             "roberta-base",
+             "gpt2",
+             "microsoft/phi-2",
+             "meta-llama/Llama-2-7b-hf"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )
@@ -90,6 +102,20 @@ if __name__ == "__main__":
     # GPT2.
     if args.model == "GPT2Model":
         tokenizer.pad_token = tokenizer.eos_token
+    elif args.model == "PhiForCausalLM_NonBFloat16":
+        tokenizer.pad_token = tokenizer.eos_token
+    elif args.model == "LlamaForCausalLM_NonBFloat16":
+        if '<pad>' not in tokenizer.get_vocab():
+            # Add the pad token
+            tokenizer.add_special_tokens({"pad_token": "<pad>"})
+            # Resize the embeddings
+            model.resize_token_embeddings(len(tokenizer))
+            # Configure the pad token in the model
+            model.config.pad_token_id = tokenizer.pad_token_id
+            # Check if they are equal
+            assert model.config.pad_token_id == tokenizer.pad_token_id, "The model's pad token ID does not match the tokenizer's pad token ID!"
+    # Print pad token
+    print(f"Pad token: {tokenizer.pad_token}")
 
     if args.bias_type == "gender":
         bias_direction = compute_gender_subspace(
@@ -108,6 +134,11 @@ if __name__ == "__main__":
         f"Saving computed PCA components to: {args.persistent_dir}/results/subspace/{experiment_id}.pt."
     )
     os.makedirs(f"{args.persistent_dir}/results/subspace", exist_ok=True)
+
+    # Modified
+    # Remove any slash from file experiment_id
+    experiment_id = experiment_id.replace("/", "_")
+
     torch.save(
         bias_direction, f"{args.persistent_dir}/results/subspace/{experiment_id}.pt"
     )
