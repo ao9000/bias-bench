@@ -2,8 +2,45 @@ import numpy as np
 from sklearn.decomposition import PCA
 import torch
 from tqdm import tqdm
+import time
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# Modified to save & load the progress
+import pickle
+import os
+# Save intermediate results every x batches
+save_interval_hours = 5  # Save every 5 hours
+# Cache path
+cache_path = "../results/.subspace_cache"
+# Gender
+def save_embeddings_gender(filename, all_embeddings_male, all_embeddings_female, start_batch):
+    with open(filename, 'wb') as f:
+        pickle.dump((all_embeddings_male, all_embeddings_female, start_batch), f)
+def load_embeddings_gender(filename):
+    if os.path.exists(filename):
+        with open(filename, 'rb') as f:
+            return pickle.load(f)
+    return None, None, 0
+# Race
+def save_embeddings_race(filename, all_embeddings_r1, all_embeddings_r2, all_embeddings_r3, start_batch):
+    with open(filename, 'wb') as f:
+        pickle.dump((all_embeddings_r1, all_embeddings_r2, all_embeddings_r3, start_batch), f)
+def load_embeddings_race(filename):
+    if os.path.exists(filename):
+        with open(filename, 'rb') as f:
+            return pickle.load(f)
+    return None, None, None, 0
+# Religion
+def save_embeddings_religion(filename, all_embeddings_r1, all_embeddings_r2, all_embeddings_r3, start_batch):
+    with open(filename, 'wb') as f:
+        pickle.dump((all_embeddings_r1, all_embeddings_r2, all_embeddings_r3, start_batch), f)
+def load_embeddings_religion(filename):
+    if os.path.exists(filename):
+        with open(filename, 'rb') as f:
+            return pickle.load(f)
+    return None, None, None, 0
+# End of modifications
 
 
 def compute_gender_subspace(data, model, tokenizer, batch_size=32):
@@ -14,11 +51,27 @@ def compute_gender_subspace(data, model, tokenizer, batch_size=32):
     # Use GPU, if available.
     model.to(device)
 
-    all_embeddings_male = []
-    all_embeddings_female = []
+    # Modified
+    start_time = time.time()
+    # Check for saved embeddings and resume from there
+    save_file = f"{os.path.join(cache_path, model.__class__.__name__+'_gender.pkl')}"
+    all_embeddings_male, all_embeddings_female, start_batch = load_embeddings_gender(save_file)
+    # If not save, means first run, initialize the embeddings
+    if all_embeddings_male is None:
+        all_embeddings_male = []
+        all_embeddings_female = []
+        print("Starting from scratch")
+    else:
+        print("Resumed from batch: ", start_batch)
+
+    # all_embeddings_male = []
+    # all_embeddings_female = []
+    
 
     n_batches = len(data) // batch_size
-    for i in tqdm(range(n_batches), desc="Encoding gender examples"):
+    # for i in tqdm(range(n_batches), desc="Encoding gender examples"):
+    # Modified
+    for i in tqdm(range(start_batch, n_batches), initial=start_batch, total=n_batches, desc="Encoding gender examples"):
         offset = batch_size * i
 
         inputs_male = tokenizer(
@@ -92,6 +145,14 @@ def compute_gender_subspace(data, model, tokenizer, batch_size=32):
         all_embeddings_male.append(embedding_male.cpu().numpy())
         all_embeddings_female.append(embedding_female.cpu().numpy())
 
+        # Modified to save the embeddings
+        # Save intermediate results every x batches
+        elapsed_time = (time.time() - start_time) / 3600  # in hours
+        if elapsed_time >= save_interval_hours:
+            print("Saving intermediate results at batch: ", i)
+            save_embeddings_gender(save_file, all_embeddings_male, all_embeddings_female, i + 1)
+            start_time = time.time()
+
     # all_embeddings_male.shape == (num_examples, dim).
     all_embeddings_male = np.concatenate(all_embeddings_male, axis=0)
     all_embeddings_female = np.concatenate(all_embeddings_female, axis=0)
@@ -121,12 +182,28 @@ def compute_race_subspace(data, model, tokenizer, batch_size=32):
     # Use GPU, if available.
     model.to(device)
 
-    all_embeddings_r1 = []
-    all_embeddings_r2 = []
-    all_embeddings_r3 = []
+    # Modified
+    start_time = time.time()
+    # Check for saved embeddings and resume from there
+    save_file = f"{os.path.join(cache_path, model.__class__.__name__ + '_race.pkl')}"
+    all_embeddings_r1, all_embeddings_r2, all_embeddings_r3, start_batch = load_embeddings_race(save_file)
+    # If not save, means first run, initialize the embeddings
+    if all_embeddings_r1 is None:
+        all_embeddings_r1 = []
+        all_embeddings_r2 = []
+        all_embeddings_r3 = []
+        print("Starting from scratch")
+    else:
+        print("Resumed from batch: ", start_batch)
+
+    # all_embeddings_r1 = []
+    # all_embeddings_r2 = []
+    # all_embeddings_r3 = []
 
     n_batches = len(data) // batch_size
-    for i in tqdm(range(n_batches), desc="Encoding race examples"):
+    # for i in tqdm(range(n_batches), desc="Encoding race examples"):
+    # Modified
+    for i in tqdm(range(start_batch, n_batches), initial=start_batch, total=n_batches, desc="Encoding race examples"):
         offset = batch_size * i
 
         inputs_r1 = tokenizer(
@@ -216,6 +293,14 @@ def compute_race_subspace(data, model, tokenizer, batch_size=32):
         all_embeddings_r1.append(embedding_r1.cpu().numpy())
         all_embeddings_r2.append(embedding_r2.cpu().numpy())
         all_embeddings_r3.append(embedding_r3.cpu().numpy())
+
+        # Modified to save the embeddings
+        # Save intermediate results every x batches
+        elapsed_time = (time.time() - start_time) / 3600  # in hours
+        if elapsed_time >= save_interval_hours:
+            print("Saving intermediate results at batch: ", i)
+            save_embeddings_race(save_file, all_embeddings_r1, all_embeddings_r2, all_embeddings_r3, i + 1)
+            start_time = time.time()
 
     # all_embeddings_r1.shape == (num_examples, dim)
     all_embeddings_r1 = np.concatenate(all_embeddings_r1, axis=0)
@@ -248,12 +333,28 @@ def compute_religion_subspace(data, model, tokenizer, batch_size=32):
     # Use GPU, if available.
     model.to(device)
 
-    all_embeddings_r1 = []
-    all_embeddings_r2 = []
-    all_embeddings_r3 = []
+    # Modified
+    start_time = time.time()
+    # Check for saved embeddings and resume from there
+    save_file = f"{os.path.join(cache_path, model.__class__.__name__ + '_religion.pkl')}"
+    all_embeddings_r1, all_embeddings_r2, all_embeddings_r3, start_batch = load_embeddings_religion(save_file)
+    # If not save, means first run, initialize the embeddings
+    if all_embeddings_r1 is None:
+        all_embeddings_r1 = []
+        all_embeddings_r2 = []
+        all_embeddings_r3 = []
+        print("Starting from scratch")
+    else:
+        print("Resumed from batch: ", start_batch)
+
+    # all_embeddings_r1 = []
+    # all_embeddings_r2 = []
+    # all_embeddings_r3 = []
 
     n_batches = len(data) // batch_size
-    for i in tqdm(range(n_batches), desc="Encoding religion examples"):
+    # for i in tqdm(range(n_batches), desc="Encoding religion examples"):
+    # Modified
+    for i in tqdm(range(start_batch, n_batches), initial=start_batch, total=n_batches, desc="Encoding religion examples"):
         offset = batch_size * i
 
         inputs_r1 = tokenizer(
@@ -344,6 +445,14 @@ def compute_religion_subspace(data, model, tokenizer, batch_size=32):
         all_embeddings_r1.append(embedding_r1.cpu().numpy())
         all_embeddings_r2.append(embedding_r2.cpu().numpy())
         all_embeddings_r3.append(embedding_r3.cpu().numpy())
+
+        # Modified to save the embeddings
+        # Save intermediate results every x batches
+        elapsed_time = (time.time() - start_time) / 3600  # in hours
+        if elapsed_time >= save_interval_hours:
+            print("Saving intermediate results at batch: ", i)
+            save_embeddings_religion(save_file, all_embeddings_r1, all_embeddings_r2, all_embeddings_r3, i + 1)
+            start_time = time.time()
 
     # all_embeddings_r1.shape == (num_examples, dim).
     all_embeddings_r1 = np.concatenate(all_embeddings_r1, axis=0)

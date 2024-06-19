@@ -58,7 +58,7 @@ parser.add_argument(
     "--bias_type",
     action="store",
     type=str,
-    choices=["gender", "religion", "race"],
+    choices=["gender", "religion", "race-color"],
     required=True,
     help="The type of bias to compute the bias subspace for.",
 )
@@ -68,6 +68,11 @@ parser.add_argument(
     type=int,
     default=32,
     help="Batch size to use while encoding.",
+)
+parser.add_argument(
+    "--sample",
+    action="store_true",
+    help="Use sampled dataset instead of the full dataset.",
 )
 
 
@@ -88,9 +93,15 @@ if __name__ == "__main__":
     print(f" - bias_type: {args.bias_type}")
     print(f" - batch_size: {args.batch_size}")
 
+    # Modified
+    if args.sample:
+        print("Using sampled dataset.")
+    else:
+        print("Using full dataset.")
+
     # Get the data to compute the SentenceDebias bias subspace.
     data = load_sentence_debias_data(
-        persistent_dir=args.persistent_dir, bias_type=args.bias_type
+        persistent_dir=args.persistent_dir, bias_type=args.bias_type, sample=args.sample,
     )
 
     # Load model and tokenizer.
@@ -105,15 +116,7 @@ if __name__ == "__main__":
     elif args.model == "PhiForCausalLM_NonBFloat16":
         tokenizer.pad_token = tokenizer.eos_token
     elif args.model == "LlamaForCausalLM_NonBFloat16":
-        if '<pad>' not in tokenizer.get_vocab():
-            # Add the pad token
-            tokenizer.add_special_tokens({"pad_token": "<pad>"})
-            # Resize the embeddings
-            model.resize_token_embeddings(len(tokenizer))
-            # Configure the pad token in the model
-            model.config.pad_token_id = tokenizer.pad_token_id
-            # Check if they are equal
-            assert model.config.pad_token_id == tokenizer.pad_token_id, "The model's pad token ID does not match the tokenizer's pad token ID!"
+        tokenizer.pad_token = tokenizer.eos_token
     # Print pad token
     print(f"Pad token: {tokenizer.pad_token}")
 
@@ -121,7 +124,7 @@ if __name__ == "__main__":
         bias_direction = compute_gender_subspace(
             data, model, tokenizer, batch_size=args.batch_size
         )
-    elif args.bias_type == "race":
+    elif args.bias_type == "race-color":
         bias_direction = compute_race_subspace(
             data, model, tokenizer, batch_size=args.batch_size
         )

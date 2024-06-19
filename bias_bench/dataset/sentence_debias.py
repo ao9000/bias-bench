@@ -3,6 +3,7 @@ import os
 
 import nltk
 from tqdm import tqdm
+import random
 
 # The original implementation uses SST, POM, WikiText-2, Reddit, Meld, and
 # News-200.
@@ -10,7 +11,7 @@ from tqdm import tqdm
 DATASET_NAMES = ["wikipedia-2.5"]
 
 
-def load_sentence_debias_data(persistent_dir, bias_type):
+def load_sentence_debias_data(persistent_dir, bias_type, sample):
     data = []
     for dataset_name in DATASET_NAMES:
         if dataset_name == "sst":
@@ -18,7 +19,7 @@ def load_sentence_debias_data(persistent_dir, bias_type):
         elif dataset_name == "pom":
             dataset = _POMDataset(persistent_dir, bias_type)
         else:
-            dataset = _GenericDataset(persistent_dir, bias_type, dataset_name)
+            dataset = _GenericDataset(persistent_dir, bias_type, dataset_name, sample)
         data.extend(dataset.load_examples())
     return data
 
@@ -140,7 +141,7 @@ class _SentenceDebiasDataset:
 
     _bias_type_to_func = {
         "gender": _gender_augment_func,
-        "race": _race_augment_func,
+        "race-color": _race_augment_func,
         "religion": _religion_augment_func,
     }
 
@@ -152,7 +153,7 @@ class _SentenceDebiasDataset:
         self._root_data_dir = f"{self._persistent_dir}/data/"
 
         with open(f"{self._persistent_dir}/data/bias_attribute_words.json", "r") as f:
-            self._attribute_words = json.load(f)[self._bias_type]
+            self._attribute_words = json.load(f)[self._bias_type if self._bias_type != 'race-color' else 'race']
 
     def load_examples(self):
         raise NotImplementedError("load_examples method not implemented.")
@@ -198,10 +199,11 @@ class _POMDataset(_SentenceDebiasDataset):
 
 
 class _GenericDataset(_SentenceDebiasDataset):
-    def __init__(self, persistent_dir, bias_type, name):
+    def __init__(self, persistent_dir, bias_type, name, sample):
         super().__init__(persistent_dir, bias_type)
         self._name = name
-        self._data_file = f"{self._root_data_dir}/{name}.txt"
+        self._data_file = f"{self._root_data_dir}/{name}.txt" if not sample else f"{self._root_data_dir}/{name}_sample.txt"
+        print(f"Loading dataset: {self._data_file}")
 
     def load_examples(self):
         examples = []
