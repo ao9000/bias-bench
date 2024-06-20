@@ -441,6 +441,8 @@ def main():
     tokenizer.pad_token = tokenizer.eos_token
     config.pad_token_id = config.eos_token_id
 
+    print(f"Padding token: {tokenizer.pad_token}")
+
     # Modified to support quantization bitsnbytes
     if model_args.model_name_or_path:
         bnb_config = None
@@ -484,6 +486,27 @@ def main():
         logger.info(
             f"Training new model from scratch - Total size={n_params/2**20:.2f}M params"
         )
+
+    # # Modified
+    # if model_args.model_name_or_path == "gpt2":
+    #     # Set padding token.
+    #     tokenizer.pad_token = tokenizer.eos_token
+    #     config.pad_token_id = config.eos_token_id
+    # elif model_args.model_name_or_path == "microsoft/phi-2":
+    #     # Set padding token.
+    #     tokenizer.pad_token = tokenizer.eos_token
+    #     config.pad_token_id = config.eos_token_id
+    # elif model_args.model_name_or_path == "meta-llama/Llama-2-7b-hf":
+    #     if '<pad>' not in tokenizer.get_vocab():
+    #         # Add the pad token
+    #         tokenizer.add_special_tokens({"pad_token": "<pad>"})
+    #         # Resize the embeddings
+    #         model.resize_token_embeddings(len(tokenizer))
+    #         # Configure the pad token in the model
+    #         model.config.pad_token_id = tokenizer.pad_token_id
+    #         # Check if they are equal
+    #         assert model.config.pad_token_id == tokenizer.pad_token_id, "The model's pad token ID does not match the tokenizer's pad token ID!"
+    # print(f"Padding token: {tokenizer.pad_token}")
 
     model.resize_token_embeddings(len(tokenizer))
 
