@@ -37,11 +37,15 @@ parser.add_argument(
         "INLPRobertaForMaskedLM",
         "INLPGPT2LMHeadModel",
 
+        "INLPPhi2LMHeadModel", # For phi 2 debiased models
+        "INLPLlama2LMHeadModel", # For llama 2 debiased models
+
         "CDABertForMaskedLM",
         "CDAAlbertForMaskedLM",
         "CDARobertaForMaskedLM",
         "CDAGPT2LMHeadModel",
-        "CDAPhi2LMHeadModel",
+        
+        "CDAPhi2LMHeadModel", # For phi 2 debiased models
         "CDALlama2LMHeadModel", # For llama 2 debiased models
 
         "DropoutBertForMaskedLM",

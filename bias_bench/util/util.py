@@ -107,6 +107,9 @@ def _is_generative(model):
         "SentenceDebiasPhi2LMHeadModel", # For phi 2 models (SentenceDebias)
         "SentenceDebiasLlama2LMHeadModel", # For llama 2 models (SentenceDebias)
 
+        "INLPPhi2LMHeadModel", # For phi 2 models (INLP)
+        "INLPLlama2LMHeadModel", # For llama 2 models (INLP)
+
     ]
 
 

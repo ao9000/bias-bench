@@ -23,7 +23,7 @@ parser.add_argument(
     action="store",
     type=str,
     default="BertModel",
-    choices=["BertModel", "AlbertModel", "RobertaModel", "GPT2Model"],
+    choices=["BertModel", "AlbertModel", "RobertaModel", "GPT2Model", "PhiForCausalLM_NonBFloat16"],
     help="Model (e.g., BertModel) to compute the INLP projection matrix for. "
     "Typically, these correspond to a HuggingFace class.",
 )
@@ -32,7 +32,7 @@ parser.add_argument(
     action="store",
     type=str,
     default="bert-base-uncased",
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2"],
+    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "microsoft/phi-2"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )
@@ -87,6 +87,10 @@ if __name__ == "__main__":
         bias_type=args.bias_type,
         n_classifiers=args.n_classifiers,
     )
+
+    # Modified
+    # Remove any slash from file experiment_id
+    experiment_id = experiment_id.replace("/", "_")
 
     print(
         f"Saving computed projection matrix to: {args.persistent_dir}/results/projection_matrix/{experiment_id}.pt"

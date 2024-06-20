@@ -7,8 +7,8 @@ import random
 
 # The original implementation uses SST, POM, WikiText-2, Reddit, Meld, and
 # News-200.
-# DATASET_NAMES = ["wikipedia-2.5_tiny"]
-DATASET_NAMES = ["wikipedia-2.5"]
+DATASET_NAMES = ["wikipedia-2.5_tiny"]
+# DATASET_NAMES = ["wikipedia-2.5"]
 
 
 def load_sentence_debias_data(persistent_dir, bias_type, sample):
@@ -202,7 +202,7 @@ class _GenericDataset(_SentenceDebiasDataset):
     def __init__(self, persistent_dir, bias_type, name, sample):
         super().__init__(persistent_dir, bias_type)
         self._name = name
-        self._data_file = f"{self._root_data_dir}/{name}.txt" if not sample else f"{self._root_data_dir}/{name}_sample.txt"
+        self._data_file = f"{self._root_data_dir}/{name}.txt" if not sample else f"{self._root_data_dir}/{name}.txt"
         print(f"Loading dataset: {self._data_file}")
 
     def load_examples(self):

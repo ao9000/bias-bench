@@ -45,7 +45,7 @@ def _load_gender_data(persistent_dir):
     count_female_sentences = 0
     count_neutral_sentences = 0
 
-    with open(f"{persistent_dir}/data/text/wikipedia-2.5.txt", "r") as f:
+    with open(f"{persistent_dir}/data/wikipedia-2.5_tiny.txt", "r") as f:
         lines = f.readlines()
     random.shuffle(lines)
 
