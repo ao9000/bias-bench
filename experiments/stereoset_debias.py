@@ -30,6 +30,9 @@ parser.add_argument(
         "SentenceDebiasRobertaForMaskedLM",
         "SentenceDebiasGPT2LMHeadModel",
 
+        "SentenceDebiasPhi2LMHeadModel", # Added for SentenceDebias Phi model
+        "SentenceDebiasLlama2LMHeadModel", # Added for SentenceDebias Llama model
+
         "INLPBertForMaskedLM",
         "INLPAlbertForMaskedLM",
         "INLPRobertaForMaskedLM",
@@ -49,6 +52,7 @@ parser.add_argument(
         "SelfDebiasBertForMaskedLM",
         "SelfDebiasAlbertForMaskedLM",
         "SelfDebiasRobertaForMaskedLM",
+
         "SelfDebiasLlama2LMHeadModel", # Added for self debiasing Llama model
         "SelfDebiasPhi2LMHeadModel", # Added for self debiasing Phi model
     ],
@@ -118,6 +122,8 @@ def get_debias_method():
         return "CDA"
     elif "Dropout".lower() in args.model.lower():
         return "Dropout"
+    elif "SentenceDebias".lower() in args.model.lower():
+        return "SentenceDebias"
 
 
 if __name__ == "__main__":
@@ -147,6 +153,7 @@ if __name__ == "__main__":
         # Load the pre-computed bias direction for SentenceDebias.
         bias_direction = torch.load(args.bias_direction)
         kwargs["bias_direction"] = bias_direction
+        print("Loaded bias direction.")
 
     if args.projection_matrix is not None:
         # Load the pre-computed projection matrix for INLP.

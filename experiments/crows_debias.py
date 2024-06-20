@@ -28,6 +28,9 @@ parser.add_argument(
         "SentenceDebiasAlbertForMaskedLM",
         "SentenceDebiasRobertaForMaskedLM",
         "SentenceDebiasGPT2LMHeadModel",
+        
+        "SentenceDebiasPhi2LMHeadModel", # For phi 2 debiased models
+        "SentenceDebiasLlama2LMHeadModel", # For llama 2 debiased models
 
         "INLPBertForMaskedLM",
         "INLPAlbertForMaskedLM",

@@ -103,6 +103,10 @@ def _is_generative(model):
 
         "CDAPhi2LMHeadModel", # For phi models (CDA)
         "CDALlama2LMHeadModel", # For llama 2 models (CDA)
+
+        "SentenceDebiasPhi2LMHeadModel", # For phi 2 models (SentenceDebias)
+        "SentenceDebiasLlama2LMHeadModel", # For llama 2 models (SentenceDebias)
+
     ]
 
 

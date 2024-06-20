@@ -35,7 +35,6 @@ parser.add_argument(
              "GPT2Model",
              "PhiForCausalLM_NonBFloat16",
              "LlamaForCausalLM_NonBFloat16",
-             "PhiForCausalLM_Quantized"
              ],
     help="Model (e.g., BertModel) to compute the SentenceDebias subspace for. "
     "Typically, these correspond to a HuggingFace class.",

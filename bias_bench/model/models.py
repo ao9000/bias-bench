@@ -99,13 +99,83 @@ class CDALlama2LMHeadModel:
 # Sentence Debias Models
 class PhiForCausalLM_NonBFloat16:
     def __new__(self, model_name_or_path):
-        return transformers.PhiForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
-                                                           output_hidden_states=True)
+        return transformers.PhiForCausalLM.from_pretrained(model_name_or_path, output_hidden_states=True)
 
 class LlamaForCausalLM_NonBFloat16:
     def __new__(self, model_name_or_path):
-        return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
-                                                             output_hidden_states=True)
+        return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, output_hidden_states=True)
+
+
+class _SentenceDebiasModel:
+    def __init__(self, model_name_or_path, bias_direction):
+        def _hook(module, input_, output, bias_direction):
+            # Debias the last hidden state.
+            # x = output["last_hidden_state"]
+            # Modified
+            if 'last_hidden_state' in output:
+                x = output["last_hidden_state"]
+            else:
+                x = output['hidden_states'][-1]
+
+            # Ensure that everything is on the same device.
+            bias_direction = bias_direction.to(x.device)
+
+            # # Print the bias direction
+            # print("Bias direction: ", bias_direction)
+            # print("Shape: ", bias_direction.shape)
+            #
+            # # Print before debiasing
+            # print("Before debiasing: ", x)
+            # # Print shape
+            # print("Shape: ", x.shape)
+
+            # Debias the representation.
+            for t in range(x.size(1)):
+                x[:, t] = x[:, t] - torch.ger(
+                    torch.matmul(x[:, t], bias_direction), bias_direction
+                ) / bias_direction.dot(bias_direction)
+
+            # # Print after debiasing
+            # print("After debiasing: ", x)
+            # print("Shape: ", x.shape)
+            # exit()
+
+            # Update the output.
+            # output["last_hidden_state"] = x
+            if 'last_hidden_state' in output:
+                output["last_hidden_state"] = x
+            else:
+                # output['hidden_states'][-1] = x
+                hidden_states = list(output['hidden_states'])
+                hidden_states[-1] = x
+                output['hidden_states'] = tuple(hidden_states)
+
+            return output
+
+        self.func = partial(_hook, bias_direction=bias_direction)
+
+class SentenceDebiasPhi2LMHeadModel(_SentenceDebiasModel):
+    def __new__(self, model_name_or_path, bias_direction):
+        super().__init__(self, model_name_or_path, bias_direction)
+        model = transformers.PhiForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
+                                                            output_hidden_states=True)
+        model.register_forward_hook(self.func)
+        return model
+
+class SentenceDebiasLlama2LMHeadModel(_SentenceDebiasModel):
+    def __new__(self, model_name_or_path, bias_direction):
+        super().__init__(self, model_name_or_path, bias_direction)
+        model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
+                                                            output_hidden_states=True)
+        model.register_forward_hook(self.func)
+        return model
+
+# class SentenceDebiasGPT2LMHeadModel(_SentenceDebiasModel):
+#     def __new__(self, model_name_or_path, bias_direction):
+#         super().__init__(self, model_name_or_path, bias_direction)
+#         model = transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path)
+#         model.transformer.register_forward_hook(self.func)
+#         return model
 
 ############################################################################################################
 
@@ -148,29 +218,6 @@ class RobertaForMaskedLM:
 class GPT2LMHeadModel:
     def __new__(self, model_name_or_path):
         return transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path)
-
-
-class _SentenceDebiasModel:
-    def __init__(self, model_name_or_path, bias_direction):
-        def _hook(module, input_, output, bias_direction):
-            # Debias the last hidden state.
-            x = output["last_hidden_state"]
-
-            # Ensure that everything is on the same device.
-            bias_direction = bias_direction.to(x.device)
-
-            # Debias the representation.
-            for t in range(x.size(1)):
-                x[:, t] = x[:, t] - torch.ger(
-                    torch.matmul(x[:, t], bias_direction), bias_direction
-                ) / bias_direction.dot(bias_direction)
-
-            # Update the output.
-            output["last_hidden_state"] = x
-
-            return output
-
-        self.func = partial(_hook, bias_direction=bias_direction)
 
 
 class _INLPModel:
