@@ -1,0 +1,42 @@
+{
+  "stereoset_m-SentenceDebiasLlama2LMHeadModel_c-meta-llama_Llama-2-7b-hf_t-religion_s-42": {
+    "intrasentence": {
+      "gender": {
+        "Count": 2313.0,
+        "LM Score": 88.05150801546353,
+        "SS Score": 66.239108105325,
+        "ICAT Score": 59.45394886546347
+      },
+      "profession": {
+        "Count": 7194.0,
+        "LM Score": 87.49974819522157,
+        "SS Score": 61.70020853130428,
+        "ICAT Score": 67.02444218880741
+      },
+      "race": {
+        "Count": 8928.0,
+        "LM Score": 87.97673768468196,
+        "SS Score": 63.82812033586075,
+        "ICAT Score": 63.64567937547721
+      },
+      "religion": {
+        "Count": 741.0,
+        "LM Score": 88.68102308344552,
+        "SS Score": 61.00692852330475,
+        "ICAT Score": 69.15890943438505
+      },
+      "overall": {
+        "Count": 6392.0,
+        "LM Score": 87.8348063808013,
+        "SS Score": 63.23071060181464,
+        "ICAT Score": 64.59246830098522
+      }
+    },
+    "overall": {
+      "Count": 6392.0,
+      "LM Score": 87.8348063808013,
+      "SS Score": 63.23071060181464,
+      "ICAT Score": 64.59246830098522
+    }
+  }
+}
