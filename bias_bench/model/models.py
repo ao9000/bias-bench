@@ -135,7 +135,6 @@ class _SentenceDebiasModel:
                 temp = list(output['hidden_states'])
                 temp[-1] = x # Update the last hidden state
                 output['hidden_states'] = tuple(temp)
-                output['last_hidden_state'] = x
 
             return output
 
@@ -146,7 +145,7 @@ class SentenceDebiasPhi2LMHeadModel(_SentenceDebiasModel):
         super().__init__(self, model_name_or_path, bias_direction)
         model = transformers.PhiForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
                                                             output_hidden_states=True)
-        model.register_forward_hook(self.func)
+        model.model.register_forward_hook(self.func)
         return model
 
 class SentenceDebiasLlama2LMHeadModel(_SentenceDebiasModel):
@@ -154,7 +153,7 @@ class SentenceDebiasLlama2LMHeadModel(_SentenceDebiasModel):
         super().__init__(self, model_name_or_path, bias_direction)
         model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
                                                             output_hidden_states=True)
-        model.register_forward_hook(self.func)
+        model.model.register_forward_hook(self.func)
         return model
 
 # INLP Models
@@ -195,7 +194,7 @@ class INLPPhi2LMHeadModel(_INLPModel):
         super().__init__(self, model_name_or_path, projection_matrix)
         model = transformers.PhiForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
                                                             output_hidden_states=True)
-        model.register_forward_hook(self.func)
+        model.model.register_forward_hook(self.func)
         return model
 
 

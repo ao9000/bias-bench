@@ -10,7 +10,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 import pickle
 import os
 # Save intermediate results every x batches
-save_interval_hours = 5  # Save every 5 hours
+save_interval_hours = 5.5  # Save every 5 hours
 # Cache path
 cache_path = "../results/.subspace_cache"
 # Gender
