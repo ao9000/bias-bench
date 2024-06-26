@@ -23,7 +23,12 @@ parser.add_argument(
     action="store",
     type=str,
     default="BertModel",
-    choices=["BertModel", "AlbertModel", "RobertaModel", "GPT2Model", "PhiForCausalLM_NonBFloat16"],
+    choices=["BertModel",
+             "AlbertModel",
+             "RobertaModel",
+             "GPT2Model",
+             "PhiForCausalLM_NonBFloat16",
+             "LlamaForCausalLM_NonBFloat16"],
     help="Model (e.g., BertModel) to compute the INLP projection matrix for. "
     "Typically, these correspond to a HuggingFace class.",
 )
@@ -32,7 +37,12 @@ parser.add_argument(
     action="store",
     type=str,
     default="bert-base-uncased",
-    choices=["bert-base-uncased", "albert-base-v2", "roberta-base", "gpt2", "microsoft/phi-2"],
+    choices=["bert-base-uncased",
+             "albert-base-v2",
+             "roberta-base",
+             "gpt2",
+             "microsoft/phi-2",
+             "meta-llama/Llama-2-7b-hf"],
     help="HuggingFace model name or path (e.g., bert-base-uncased). Checkpoint from which a "
     "model is instantiated.",
 )
@@ -40,7 +50,7 @@ parser.add_argument(
     "--bias_type",
     action="store",
     default="gender",
-    choices=["gender", "race", "religion"],
+    choices=["gender", "race-color", "religion"],
     help="What type of bias to compute the INLP projection matrix for.",
 )
 parser.add_argument(
@@ -50,6 +60,12 @@ parser.add_argument(
     default=80,
     help="Number of classifiers to train when computing projection matrix.",
 )
+parser.add_argument(
+    "--sample",
+    action="store_true",
+    help="Use sampled dataset instead of the full dataset.",
+)
+
 parser.add_argument("--seed", action="store", type=int, default=0, help="Seed for RNG.")
 
 
@@ -73,7 +89,8 @@ if __name__ == "__main__":
     print(f" - seed: {args.seed}")
 
     # Load data for INLP classifiers.
-    data = load_inlp_data(args.persistent_dir, args.bias_type, seed=args.seed)
+    # data = load_inlp_data(args.persistent_dir, args.bias_type, seed=args.seed)
+    data = load_inlp_data(args.persistent_dir, args.bias_type, args.sample, seed=args.seed)
 
     # Load model and tokenizer.
     model = getattr(models, args.model)(args.model_name_or_path)

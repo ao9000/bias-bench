@@ -6,6 +6,25 @@ from tqdm import tqdm
 
 from bias_bench.debias.inlp import debias
 
+
+
+import pickle
+import os
+############################################## Modified
+cache_path = "../results/.inlp_cache"
+x_classifier_save_interval = 10
+def save_encodings(file_path, *arrays):
+    with open(file_path, 'wb') as f:
+        pickle.dump(arrays, f)
+
+def load_encodings(file_path):
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as f:
+            return pickle.load(f)
+
+    return None
+###########################################################
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -22,6 +41,16 @@ def _extract_gender_features(
     Notes:
         * Implementation taken from  https://github.com/pliang279/LM_bias.
     """
+
+    # Modified to enable loading encodings from file cache
+    path = os.path.join(cache_path, f"{model.__class__.__name__}_gender.pkl")
+    enc = load_encodings(path)
+    if enc is not None:
+        print(f"Loaded encodings from cache: {path}")
+        return enc
+    print(f"Computing encoding from scratch")
+    # End of modification
+
     model.to(device)
 
     male_features = []
@@ -79,6 +108,10 @@ def _extract_gender_features(
     female_features = np.array(female_features)
     neutral_features = np.array(neutral_features)
 
+    # Modified to save encodings to file cache
+    print("Saving encodings to cache")
+    save_encodings(path, male_features, female_features, neutral_features)
+
     return male_features, female_features, neutral_features
 
 
@@ -90,6 +123,16 @@ def _extract_binary_features(model, tokenizer, bias_sentences, neutral_sentences
         * Sentences are split into two classes based upon if they contain *any* race/religion bias
           attribute words.
     """
+
+    # Modified to enable loading encodings from file cache
+    path = os.path.join(cache_path, f"{model.__class__.__name__}_religion_race.pkl")
+    enc = load_encodings(path)
+    if enc is not None:
+        print(f"Loaded encodings from cache: {path}")
+        return enc
+    print(f"Computing encoding from scratch")
+    # End of modification
+
     model.to(device)
 
     bias_features = []
@@ -102,7 +145,12 @@ def _extract_binary_features(model, tokenizer, bias_sentences, neutral_sentences
                 sentence, add_special_tokens=True, truncation=True, return_tensors="pt"
             ).to(device)
 
-            outputs = model(**input_ids)["last_hidden_state"]
+            # outputs = model(**input_ids)["last_hidden_state"]
+            try:
+                outputs = model(**input_ids)["last_hidden_state"]
+            except KeyError:
+                outputs = model(**input_ids)['hidden_states'][-1]
+
             outputs = torch.mean(outputs, dim=1)
             outputs = outputs.squeeze().detach().cpu().numpy()
 
@@ -113,7 +161,12 @@ def _extract_binary_features(model, tokenizer, bias_sentences, neutral_sentences
                 sentence, add_special_tokens=True, truncation=True, return_tensors="pt"
             ).to(device)
 
-            outputs = model(**input_ids)["last_hidden_state"]
+            # outputs = model(**input_ids)["last_hidden_state"]
+            try:
+                outputs = model(**input_ids)["last_hidden_state"]
+            except KeyError:
+                outputs = model(**input_ids)['hidden_states'][-1]
+
             outputs = torch.mean(outputs, dim=1)
             outputs = outputs.squeeze().detach().cpu().numpy()
 
@@ -121,6 +174,10 @@ def _extract_binary_features(model, tokenizer, bias_sentences, neutral_sentences
 
     bias_features = np.array(bias_features)
     neutral_features = np.array(neutral_features)
+
+    # Modified to save encodings to file cache
+    print("Saving encodings to cache")
+    save_encodings(path, bias_features, neutral_features)
 
     return bias_features, neutral_features
 

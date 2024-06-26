@@ -5,7 +5,7 @@ import nltk
 from tqdm import tqdm
 
 
-def load_inlp_data(persistent_dir, bias_type, seed=0):
+def load_inlp_data(persistent_dir, bias_type, sample, seed=0):
     """Loads sentences used to train INLP classifiers.
 
     Args:
@@ -16,15 +16,15 @@ def load_inlp_data(persistent_dir, bias_type, seed=0):
     random.seed(seed)
 
     if bias_type == "gender":
-        data = _load_gender_data(persistent_dir)
-    elif bias_type == "race":
-        data = _load_race_data(persistent_dir)
+        data = _load_gender_data(persistent_dir, sample)
+    elif bias_type == "race-color":
+        data = _load_race_data(persistent_dir, sample)
     else:
-        data = _load_religion_data(persistent_dir)
+        data = _load_religion_data(persistent_dir, sample)
     return data
 
 
-def _load_gender_data(persistent_dir):
+def _load_gender_data(persistent_dir, sample):
     # Load the bias attribute words.
     with open(f"{persistent_dir}/data/bias_attribute_words.json", "r") as f:
         attribute_words = json.load(f)["gender"]
@@ -45,7 +45,10 @@ def _load_gender_data(persistent_dir):
     count_female_sentences = 0
     count_neutral_sentences = 0
 
-    with open(f"{persistent_dir}/data/wikipedia-2.5_tiny.txt", "r") as f:
+    # Modified
+    dataset_path = f"{persistent_dir}/data/wikipedia-2.5.txt" if not sample else f"{persistent_dir}/data/wikipedia-2.5_sample.txt"
+    print(f"Loading dataset from {dataset_path}")
+    with open(dataset_path, "r") as f:
         lines = f.readlines()
     random.shuffle(lines)
 
@@ -135,7 +138,7 @@ def _load_gender_data(persistent_dir):
     return data
 
 
-def _load_race_data(persistent_dir):
+def _load_race_data(persistent_dir, sample):
     # Load the bias attribute words.
     with open(f"{persistent_dir}/data/bias_attribute_words.json", "r") as f:
         attribute_words = json.load(f)["race"]
@@ -152,7 +155,10 @@ def _load_race_data(persistent_dir):
     count_race_sentences = 0
     count_neutral_sentences = 0
 
-    with open(f"{persistent_dir}/data/text/wikipedia-2.5.txt", "r") as f:
+    # Modified
+    dataset_path = f"{persistent_dir}/data/wikipedia-2.5.txt" if not sample else f"{persistent_dir}/data/wikipedia-2.5_sample.txt"
+    print(f"Loading dataset from {dataset_path}")
+    with open(dataset_path, "r") as f:
         lines = f.readlines()
     random.shuffle(lines)
 
@@ -205,7 +211,7 @@ def _load_race_data(persistent_dir):
     return data
 
 
-def _load_religion_data(persistent_dir):
+def _load_religion_data(persistent_dir, sample):
     # Load the bias attribute words.
     with open(f"{persistent_dir}/data/bias_attribute_words.json", "r") as f:
         attribute_words = json.load(f)["religion"]
@@ -224,7 +230,9 @@ def _load_religion_data(persistent_dir):
     count_religion_sentences = 0
     count_neutral_sentences = 0
 
-    with open(f"{persistent_dir}/data/text/wikipedia-2.5.txt", "r") as f:
+    dataset_path = f"{persistent_dir}/data/wikipedia-2.5.txt" if not sample else f"{persistent_dir}/data/wikipedia-2.5_sample.txt"
+    print(f"Loading dataset from {dataset_path}")
+    with open(dataset_path, "r") as f:
         lines = f.readlines()
     random.shuffle(lines)
 

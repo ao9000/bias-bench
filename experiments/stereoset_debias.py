@@ -55,6 +55,9 @@ parser.add_argument(
 
         "SelfDebiasLlama2LMHeadModel", # Added for self debiasing Llama model
         "SelfDebiasPhi2LMHeadModel", # Added for self debiasing Phi model
+
+        "INLPPhi2LMHeadModel",  # For phi 2 debiased models
+        "INLPLlama2LMHeadModel",  # For llama 2 debiased models
     ],
     help="Model to evalute (e.g., SentenceDebiasBertForMaskedLM).",
 )

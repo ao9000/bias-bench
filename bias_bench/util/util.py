@@ -110,6 +110,9 @@ def _is_generative(model):
         "INLPPhi2LMHeadModel", # For phi 2 models (INLP)
         "INLPLlama2LMHeadModel", # For llama 2 models (INLP)
 
+        "PhiForCausalLM_NonBFloat16", # For phi models
+        "LlamaForCausalLM_NonBFloat16", # For llama 2 models
+
     ]
 
 

@@ -179,8 +179,6 @@ class _INLPModel:
                 output["last_hidden_state"] = x
             else:
                 # output['hidden_states'][-1] = x
-                output["hidden_states"] = x
-
                 temp = list(output['hidden_states'])
                 temp[-1] = x # Update the last hidden state
                 output['hidden_states'] = tuple(temp)
@@ -197,6 +195,13 @@ class INLPPhi2LMHeadModel(_INLPModel):
         model.model.register_forward_hook(self.func)
         return model
 
+class INLPLlama2LMHeadModel(_INLPModel):
+    def __new__(self, model_name_or_path, projection_matrix):
+        super().__init__(self, model_name_or_path, projection_matrix)
+        model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
+                                                              output_hidden_states=True)
+        model.model.register_forward_hook(self.func)
+        return model
 
 ############################################################################################################
 

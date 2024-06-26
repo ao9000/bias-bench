@@ -8,7 +8,35 @@ import numpy as np
 import scipy
 from tqdm import tqdm
 
+
 from bias_bench.debias.inlp import classifier
+
+import time
+import pickle
+import os
+# Modified to save classifier states
+save_interval_hours = 5.5
+cache_path = "../results/.inlp_cache"
+def save_classifier_state(file_path, P, rowspace_projections, Ws, num_classifiers_done, clf, X_train, X_dev, X_train_cp, X_dev_cp):
+    state = {
+        'P': P,
+        'rowspace_projections': rowspace_projections,
+        'Ws': Ws,
+        'num_classifiers_done': num_classifiers_done,
+        'classifier': clf,
+        'X_train': X_train,
+        'X_dev': X_dev,
+        'X_train_cp': X_train_cp,
+        'X_dev_cp': X_dev_cp,
+    }
+    with open(file_path, 'wb') as f:
+        pickle.dump(state, f)
+
+def load_classifier_state(file_path):
+    with open(file_path, 'rb') as f:
+        state = pickle.load(f)
+    return (state['P'], state['rowspace_projections'], state['Ws'], state['num_classifiers_done'], state['classifier'],
+            state['X_train'], state['X_dev'], state['X_train_cp'], state['X_dev_cp'])
 
 
 def get_rowspace_projection(W: np.ndarray) -> np.ndarray:
@@ -100,6 +128,7 @@ def get_debiasing_projection(
     Returns:
         P, the debiasing projection; rowspace_projections, the list of all rowspace projection; Ws, the list of all calssifiers.
     """
+
     if dropout_rate > 0 and is_autoregressive:
         warnings.warn(
             "Note: when using dropout with autoregressive training, the property w_i.dot(w_(i+1)) = 0 no longer holds."
@@ -117,7 +146,23 @@ def get_debiasing_projection(
     rowspace_projections = []
     Ws = []
 
-    pbar = tqdm(range(num_classifiers))
+    # Modified to load classifier state cache
+    state_file = os.path.join(cache_path, f"{classifier_class.__name__}.pkl")
+    start_time = time.time()
+    if os.path.exists(state_file):
+        P, rowspace_projections, Ws, num_classifiers_done, clf, X_train, X_dev, X_train_cp, X_dev_cp = load_classifier_state(state_file)
+        print(f"Resuming from {num_classifiers_done} classifiers")
+    else:
+        print("Starting from scratch")
+        num_classifiers_done = 0
+    # End of modification
+
+    # pbar = tqdm(range(num_classifiers))
+    # for i in pbar:
+
+    # Modified
+    # Initialize the progress bar with the correct initial value
+    pbar = tqdm(range(num_classifiers_done, num_classifiers), initial=num_classifiers_done, total=num_classifiers)
     for i in pbar:
 
         clf = classifier.SKlearnClassifier(classifier_class(**cls_params))
@@ -163,6 +208,16 @@ def get_debiasing_projection(
 
             X_train_cp = (P.dot(X_train.T)).T
             X_dev_cp = (P.dot(X_dev.T)).T
+
+
+        # Modified to save classifier state cache
+        elapsed_time = (time.time() - start_time) / 3600  # in hours
+        if elapsed_time >= save_interval_hours:
+            save_classifier_state(state_file, P, rowspace_projections, Ws, i + 1, clf, X_train, X_dev, X_train_cp, X_dev_cp)
+            print(f"Saved classifier state at {i+1} classifiers")
+            # Reset timer
+            start_time = time.time()
+        # End of modification
 
     # Calculate the final projection matrix P=PnPn-1....P2P1
     # since w_i.dot(w_i-1) = 0, P2P1 = I - P1 - P2 (proof in the paper); this is more stable.
