@@ -42,14 +42,14 @@ def _extract_gender_features(
         * Implementation taken from  https://github.com/pliang279/LM_bias.
     """
 
-    # Modified to enable loading encodings from file cache
-    path = os.path.join(cache_path, f"{model.__class__.__name__}_gender.pkl")
-    enc = load_encodings(path)
-    if enc is not None:
-        print(f"Loaded encodings from cache: {path}")
-        return enc
-    print(f"Computing encoding from scratch")
-    # End of modification
+    # # Modified to enable loading encodings from file cache
+    # path = os.path.join(cache_path, f"{model.__class__.__name__}_gender.pkl")
+    # enc = load_encodings(path)
+    # if enc is not None:
+    #     print(f"Loaded encodings from cache: {path}")
+    #     return enc
+    # print(f"Computing encoding from scratch")
+    # # End of modification
 
     model.to(device)
 
@@ -108,9 +108,9 @@ def _extract_gender_features(
     female_features = np.array(female_features)
     neutral_features = np.array(neutral_features)
 
-    # Modified to save encodings to file cache
-    print("Saving encodings to cache")
-    save_encodings(path, male_features, female_features, neutral_features)
+    # # Modified to save encodings to file cache
+    # print("Saving encodings to cache")
+    # save_encodings(path, male_features, female_features, neutral_features)
 
     return male_features, female_features, neutral_features
 
@@ -124,14 +124,14 @@ def _extract_binary_features(model, tokenizer, bias_sentences, neutral_sentences
           attribute words.
     """
 
-    # Modified to enable loading encodings from file cache
-    path = os.path.join(cache_path, f"{model.__class__.__name__}_religion_race.pkl")
-    enc = load_encodings(path)
-    if enc is not None:
-        print(f"Loaded encodings from cache: {path}")
-        return enc
-    print(f"Computing encoding from scratch")
-    # End of modification
+    # # Modified to enable loading encodings from file cache
+    # path = os.path.join(cache_path, f"{model.__class__.__name__}_religion_race.pkl")
+    # enc = load_encodings(path)
+    # if enc is not None:
+    #     print(f"Loaded encodings from cache: {path}")
+    #     return enc
+    # print(f"Computing encoding from scratch")
+    # # End of modification
 
     model.to(device)
 
@@ -175,9 +175,9 @@ def _extract_binary_features(model, tokenizer, bias_sentences, neutral_sentences
     bias_features = np.array(bias_features)
     neutral_features = np.array(neutral_features)
 
-    # Modified to save encodings to file cache
-    print("Saving encodings to cache")
-    save_encodings(path, bias_features, neutral_features)
+    # # Modified to save encodings to file cache
+    # print("Saving encodings to cache")
+    # save_encodings(path, bias_features, neutral_features)
 
     return bias_features, neutral_features
 
