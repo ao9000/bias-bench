@@ -58,6 +58,9 @@ parser.add_argument(
 
         "INLPPhi2LMHeadModel",  # For phi 2 debiased models
         "INLPLlama2LMHeadModel",  # For llama 2 debiased models
+
+        "CDAPhi2LMHeadModel",  # For phi 2 debiased models
+        "CDALlama2LMHeadModel",  # For llama 2 debiased models
     ],
     help="Model to evalute (e.g., SentenceDebiasBertForMaskedLM).",
 )
@@ -115,6 +118,14 @@ parser.add_argument(
     default=None,
     help="RNG seed. Used for logging in experiment ID.",
 )
+parser.add_argument(
+   "--ckpt_num",
+   action="store",
+   type=int,
+    default=None,
+   help="Checkpoint number to be included in the experiment ID and results file name.",
+)
+
 
 def get_debias_method():
     if "SelfDebias".lower() in args.model.lower():
@@ -196,6 +207,7 @@ if __name__ == "__main__":
 
     os.makedirs(f"{args.persistent_dir}/results/stereoset", exist_ok=True)
     with open(
-        f"{args.persistent_dir}/results/stereoset_{get_debias_method()}/{experiment_id}.json", "w"
+        f"{args.persistent_dir}/results/stereoset_{get_debias_method()}/{experiment_id}.json" if args.ckpt_num is None
+        else f"{args.persistent_dir}/results/stereoset_{get_debias_method()}/{experiment_id}_ckpt_{args.ckpt_num}.json", "w"
     ) as f:
         json.dump(results, f, indent=2)

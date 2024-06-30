@@ -3,6 +3,7 @@ from functools import partial
 import torch
 import transformers
 
+from peft import AutoPeftModelForCausalLM
 from bias_bench.debias.self_debias.modeling import GPT2Wrapper, Llama2Wrapper, Phi2Wrapper
 from bias_bench.debias.self_debias.modeling import MaskedLMWrapper
 
@@ -88,12 +89,45 @@ class SelfDebiasPhi2LMHeadModel:
 # CDA Models
 class CDAPhi2LMHeadModel:
     def __new__(self, model_name_or_path):
-        model = transformers.PhiForCausalLM.from_pretrained(model_name_or_path).bfloat16()
+        # Method 1: Combine adaptors, unload model then load
+        # model = transformers.PhiForCausalLM.from_pretrained(model_name_or_path).bfloat16()
+
+        # Method 2: Load model directly using peft
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+        )
+
+        model = AutoPeftModelForCausalLM.from_pretrained(
+            model_name_or_path,
+            device_map="auto",
+            torch_dtype=torch.bfloat16,
+            output_hidden_states=True,
+            quantization_config=bnb_config,
+        ).bfloat16()
         return model
+
 
 class CDALlama2LMHeadModel:
     def __new__(self, model_name_or_path):
-        model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path).bfloat16()
+        # Method 1: Combine adaptors, unload model then load
+        # model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path).bfloat16()
+
+        # Method 2: Load model directly using peft
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+        )
+
+        model = AutoPeftModelForCausalLM.from_pretrained(
+            model_name_or_path,
+            device_map="auto",
+            torch_dtype=torch.bfloat16,
+            output_hidden_states=True,
+            quantization_config=bnb_config,
+        ).bfloat16()
         return model
 
 # Sentence Debias Models & INLP

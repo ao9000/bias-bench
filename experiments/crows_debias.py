@@ -98,6 +98,13 @@ parser.add_argument(
    choices=["race-color", "gender", "socioeconomic", "sexual-orientation", "religion", "age", "nationality", "disability", "physical-appearance"],
    help="Determines which CrowS-Pairs dataset split to evaluate against.",
 )
+parser.add_argument(
+   "--ckpt_num",
+   action="store",
+   type=int,
+    default=None,
+   help="Checkpoint number to be included in the experiment ID and results file name.",
+)
 
 
 def get_debias_method():
@@ -172,6 +179,23 @@ if __name__ == "__main__":
     experiment_id = experiment_id.replace("/", "_")
 
     os.makedirs(f"{args.persistent_dir}/results/crows", exist_ok=True)
-    with open(f"{args.persistent_dir}/results/crows_{get_debias_method()}/{experiment_id}.json", "w") as f:
+    
+    file_path = f"{args.persistent_dir}/results/crows_{get_debias_method()}/{experiment_id}.json"
+    if args.ckpt_num is not None:
+        # Add checkpoint number to results as key
+        if os.path.exists(file_path):
+            # Change to append mode
+            existing_results = {}
+            with open(file_path, "r") as f:
+                # Load prev res
+                existing_results = json.load(f)
+            # Add new res to existing res
+            existing_results[str(args.ckpt_num)] = results
+            results = existing_results
+        else:
+            # First run
+            results = {args.ckpt_num: results}
+
+    with open(file_path, "w") as f:
         json.dump(results, f, indent=4, sort_keys=True)
         # json.dump(results, f)
