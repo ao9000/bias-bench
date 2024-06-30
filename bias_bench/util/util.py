@@ -34,6 +34,17 @@
 #
 #     return prefix_token_counts
 
+def get_target_modules_for_model(model_name):
+    # Return all linear layers to be as good as full fine-tuning performance
+    target_modules = {
+        "gpt2": ["query", "value"],
+        "microsoft/phi-2": ["q_proj", "k_proj", "v_proj", "dense", "fc1", "fc2"],
+        "meta-llama/Llama-2-7b-hf": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+    }
+
+    return target_modules[model_name]
+
+
 # This code is the calculated prefix token count for each model, to save loading time
 def get_self_debias_prefix_token_count(model_name):
     self_debias_token_count = {"gpt2":

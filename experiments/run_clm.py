@@ -57,6 +57,7 @@ from transformers.testing_utils import CaptureLogger
 from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils import check_min_version
 from transformers.utils.versions import require_version
+from bias_bench.util.util import get_target_modules_for_model
 
 
 # Will error if the minimal version of Transformers is not installed. Remove at your own risks.
@@ -458,11 +459,15 @@ def main():
             # we should train all layers with lora
             # At the same time, rank will not matter when training all layers, but 16 is a start considering
             # Bias tuning is not a simple downstream task
+            # Get target_layers for the model
+            target_modules = get_target_modules_for_model(model_args.model_name_or_path)
+            print(f"Training target modules: {target_modules}")
+
             peft_config = LoraConfig(
                 r=8,
                 lora_alpha=16,
                 lora_dropout=0.1,
-                target_modules=["gate_proj", "down_proj", "up_proj", "q_proj", "v_proj", "k_proj", "o_proj"],
+                target_modules=target_modules,
                 bias="none",
                 task_type="CAUSAL_LM",
             )
