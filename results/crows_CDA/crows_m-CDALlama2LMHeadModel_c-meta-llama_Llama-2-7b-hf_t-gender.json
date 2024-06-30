@@ -1,0 +1,182 @@
+{
+    "100": {
+        "gender": {
+            "Anti-stereotype score": 62.14,
+            "Metric score": 56.11,
+            "Num. neutral": 0.0,
+            "Stereotype score": 52.2,
+            "Total examples": 262
+        }
+    },
+    "1000": {
+        "gender": {
+            "Anti-stereotype score": 55.34,
+            "Metric score": 57.25,
+            "Num. neutral": 0.0,
+            "Stereotype score": 58.49,
+            "Total examples": 262
+        }
+    },
+    "1100": {
+        "gender": {
+            "Anti-stereotype score": 53.4,
+            "Metric score": 58.02,
+            "Num. neutral": 0.0,
+            "Stereotype score": 61.01,
+            "Total examples": 262
+        }
+    },
+    "1200": {
+        "gender": {
+            "Anti-stereotype score": 49.51,
+            "Metric score": 56.11,
+            "Num. neutral": 0.0,
+            "Stereotype score": 60.38,
+            "Total examples": 262
+        }
+    },
+    "1300": {
+        "gender": {
+            "Anti-stereotype score": 50.49,
+            "Metric score": 56.87,
+            "Num. neutral": 0.0,
+            "Stereotype score": 61.01,
+            "Total examples": 262
+        }
+    },
+    "1400": {
+        "gender": {
+            "Anti-stereotype score": 53.4,
+            "Metric score": 57.25,
+            "Num. neutral": 0.0,
+            "Stereotype score": 59.75,
+            "Total examples": 262
+        }
+    },
+    "1500": {
+        "gender": {
+            "Anti-stereotype score": 52.43,
+            "Metric score": 57.25,
+            "Num. neutral": 0.0,
+            "Stereotype score": 60.38,
+            "Total examples": 262
+        }
+    },
+    "1600": {
+        "gender": {
+            "Anti-stereotype score": 53.4,
+            "Metric score": 57.25,
+            "Num. neutral": 0.0,
+            "Stereotype score": 59.75,
+            "Total examples": 262
+        }
+    },
+    "1700": {
+        "gender": {
+            "Anti-stereotype score": 50.49,
+            "Metric score": 56.49,
+            "Num. neutral": 0.0,
+            "Stereotype score": 60.38,
+            "Total examples": 262
+        }
+    },
+    "1800": {
+        "gender": {
+            "Anti-stereotype score": 51.46,
+            "Metric score": 57.25,
+            "Num. neutral": 0.0,
+            "Stereotype score": 61.01,
+            "Total examples": 262
+        }
+    },
+    "1900": {
+        "gender": {
+            "Anti-stereotype score": 52.43,
+            "Metric score": 58.02,
+            "Num. neutral": 0.0,
+            "Stereotype score": 61.64,
+            "Total examples": 262
+        }
+    },
+    "200": {
+        "gender": {
+            "Anti-stereotype score": 60.19,
+            "Metric score": 59.16,
+            "Num. neutral": 0.0,
+            "Stereotype score": 58.49,
+            "Total examples": 262
+        }
+    },
+    "2000": {
+        "gender": {
+            "Anti-stereotype score": 52.43,
+            "Metric score": 56.87,
+            "Num. neutral": 0.0,
+            "Stereotype score": 59.75,
+            "Total examples": 262
+        }
+    },
+    "300": {
+        "gender": {
+            "Anti-stereotype score": 58.25,
+            "Metric score": 56.49,
+            "Num. neutral": 0.0,
+            "Stereotype score": 55.35,
+            "Total examples": 262
+        }
+    },
+    "400": {
+        "gender": {
+            "Anti-stereotype score": 56.31,
+            "Metric score": 55.73,
+            "Num. neutral": 0.0,
+            "Stereotype score": 55.35,
+            "Total examples": 262
+        }
+    },
+    "500": {
+        "gender": {
+            "Anti-stereotype score": 53.4,
+            "Metric score": 56.11,
+            "Num. neutral": 0.0,
+            "Stereotype score": 57.86,
+            "Total examples": 262
+        }
+    },
+    "600": {
+        "gender": {
+            "Anti-stereotype score": 56.31,
+            "Metric score": 57.25,
+            "Num. neutral": 0.0,
+            "Stereotype score": 57.86,
+            "Total examples": 262
+        }
+    },
+    "700": {
+        "gender": {
+            "Anti-stereotype score": 53.4,
+            "Metric score": 56.11,
+            "Num. neutral": 0.0,
+            "Stereotype score": 57.86,
+            "Total examples": 262
+        }
+    },
+    "800": {
+        "gender": {
+            "Anti-stereotype score": 54.37,
+            "Metric score": 56.87,
+            "Num. neutral": 0.0,
+            "Stereotype score": 58.49,
+            "Total examples": 262
+        }
+    },
+    "900": {
+        "gender": {
+            "Anti-stereotype score": 53.4,
+            "Metric score": 56.49,
+            "Num. neutral": 0.0,
+            "Stereotype score": 58.49,
+            "Total examples": 262
+        }
+    }
+}
