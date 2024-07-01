@@ -414,9 +414,20 @@ def main():
         logger.info(
             f"Setting dropout hyperparameters for: {model_args.model_name_or_path}."
         )
-        config.resid_pdrop = 0.15
-        config.embd_pdrop = 0.15
-        config.attn_pdrop = 0.15
+
+        if model_args.model_name_or_path == "gpt2":
+            # Reference: https://huggingface.co/docs/transformers/en/model_doc/gpt2
+            config.resid_pdrop = 0.15
+            config.embd_pdrop = 0.15
+            config.attn_pdrop = 0.15
+        elif model_args.model_name_or_path == "meta-llama/Llama-2-7b-hf":
+            # Reference: https://huggingface.co/docs/transformers/en/model_doc/llama2
+            config.attention_dropout = 0.15
+        elif model_args.model_name_or_path == "microsoft/phi-2":
+            # Reference: https://huggingface.co/docs/transformers/en/model_doc/phi
+            config.resid_pdrop = 0.15
+            config.embd_pdrop = 0.15
+            config.attention_dropout = 0.15
 
     tokenizer_kwargs = {
         "cache_dir": model_args.cache_dir,
