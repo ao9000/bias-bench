@@ -1,0 +1,42 @@
+{
+  "stereoset_m-CDALlama2LMHeadModel_c-meta-llama_Llama-2-7b-hf_t-gender_s-42_ckpt_1600": {
+    "intrasentence": {
+      "gender": {
+        "Count": 2313.0,
+        "LM Score": 87.8825580073581,
+        "SS Score": 62.562704623749106,
+        "ICAT Score": 65.80170565083937
+      },
+      "profession": {
+        "Count": 7194.0,
+        "LM Score": 86.51317725306444,
+        "SS Score": 58.295132598209825,
+        "ICAT Score": 72.16041171693244
+      },
+      "race": {
+        "Count": 8928.0,
+        "LM Score": 86.43355894176685,
+        "SS Score": 63.44271168449737,
+        "ICAT Score": 63.195530687383226
+      },
+      "religion": {
+        "Count": 741.0,
+        "LM Score": 90.93571358124565,
+        "SS Score": 58.35741902668118,
+        "ICAT Score": 75.735956323471
+      },
+      "overall": {
+        "Count": 6392.0,
+        "LM Score": 86.81023254399753,
+        "SS Score": 61.23010852950286,
+        "ICAT Score": 67.31246588518806
+      }
+    },
+    "overall": {
+      "Count": 6392.0,
+      "LM Score": 86.81023254399753,
+      "SS Score": 61.23010852950286,
+      "ICAT Score": 67.31246588518806
+    }
+  }
+}
