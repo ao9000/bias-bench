@@ -1,51 +1,51 @@
 {
     "age": {
-        "Anti-stereotype score": 64.29,
+        "Anti-stereotype score": 42.86,
         "Metric score": 51.72,
         "Num. neutral": 0.0,
-        "Stereotype score": 49.32,
+        "Stereotype score": 53.42,
         "Total examples": 87
     },
     "disability": {
         "Anti-stereotype score": 66.67,
-        "Metric score": 56.67,
+        "Metric score": 61.67,
         "Num. neutral": 0.0,
-        "Stereotype score": 56.14,
+        "Stereotype score": 61.4,
         "Total examples": 60
     },
     "gender": {
-        "Anti-stereotype score": 62.14,
-        "Metric score": 56.87,
+        "Anti-stereotype score": 58.25,
+        "Metric score": 54.96,
         "Num. neutral": 0.0,
-        "Stereotype score": 53.46,
+        "Stereotype score": 52.83,
         "Total examples": 262
     },
     "nationality": {
         "Anti-stereotype score": 45.45,
-        "Metric score": 45.91,
+        "Metric score": 47.8,
         "Num. neutral": 0.0,
-        "Stereotype score": 45.95,
+        "Stereotype score": 47.97,
         "Total examples": 159
     },
     "physical-appearance": {
-        "Anti-stereotype score": 45.45,
-        "Metric score": 57.14,
+        "Anti-stereotype score": 54.55,
+        "Metric score": 58.73,
         "Num. neutral": 0.0,
         "Stereotype score": 59.62,
         "Total examples": 63
     },
     "race-color": {
-        "Anti-stereotype score": 62.79,
-        "Metric score": 59.69,
-        "Num. neutral": 0.0,
-        "Stereotype score": 59.41,
+        "Anti-stereotype score": 60.47,
+        "Metric score": 57.95,
+        "Num. neutral": 0.19,
+        "Stereotype score": 57.84,
         "Total examples": 516
     },
     "religion": {
         "Anti-stereotype score": 66.67,
-        "Metric score": 62.86,
+        "Metric score": 63.81,
         "Num. neutral": 0.0,
-        "Stereotype score": 62.63,
+        "Stereotype score": 63.64,
         "Total examples": 105
     },
     "sexual-orientation": {
@@ -56,10 +56,10 @@
         "Total examples": 84
     },
     "socioeconomic": {
-        "Anti-stereotype score": 53.33,
-        "Metric score": 63.95,
+        "Anti-stereotype score": 40.0,
+        "Metric score": 63.37,
         "Num. neutral": 0.0,
-        "Stereotype score": 64.97,
+        "Stereotype score": 65.61,
         "Total examples": 172
     }
 }

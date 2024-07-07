@@ -47,6 +47,11 @@ class LlamaForCausalLM:
         return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, return_dict=True,
                                                              output_hidden_states=True).bfloat16()
 
+class GPT2LMHeadModel:
+    def __new__(self, model_name_or_path):
+        return transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path, return_dict=True,
+                                                             output_hidden_states=True).bfloat16()
+
 # Quantized versions of the models
 # class PhiForCausalLM_Quantized:
 #     def __new__(self, model_name_or_path):
@@ -83,6 +88,11 @@ class SelfDebiasLlama2LMHeadModel:
 class SelfDebiasPhi2LMHeadModel:
     def __new__(self, model_name_or_path):
         model = Phi2Wrapper(model_name_or_path, use_cuda=True)
+        return model
+
+class SelfDebiasGPT2LMHeadModel:
+    def __new__(self, model_name_or_path):
+        model = GPT2Wrapper(model_name_or_path, use_cuda=True)
         return model
 
 
@@ -130,6 +140,30 @@ class CDALlama2LMHeadModel:
         ).bfloat16()
         return model
 
+class CDAGPT2LMHeadModel:
+    def __new__(self, model_name_or_path):
+        # model = transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path)
+        # return model
+
+        # Method 1: Combine adaptors, unload model then load
+        # model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path).bfloat16()
+
+        # Method 2: Load model directly using peft
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+        )
+
+        model = AutoPeftModelForCausalLM.from_pretrained(
+            model_name_or_path,
+            device_map="auto",
+            torch_dtype=torch.bfloat16,
+            output_hidden_states=True,
+            quantization_config=bnb_config,
+        ).bfloat16()
+        return model
+
 # Sentence Debias Models & INLP
 class PhiForCausalLM_NonBFloat16:
     def __new__(self, model_name_or_path):
@@ -138,6 +172,10 @@ class PhiForCausalLM_NonBFloat16:
 class LlamaForCausalLM_NonBFloat16:
     def __new__(self, model_name_or_path):
         return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, output_hidden_states=True)
+
+class GPT2LMHeadModel_NonBFloat16:
+    def __new__(self, model_name_or_path):
+        return transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path, output_hidden_states=True)
 
 # Sentence Debias Models
 class _SentenceDebiasModel:
@@ -190,6 +228,14 @@ class SentenceDebiasLlama2LMHeadModel(_SentenceDebiasModel):
         model.model.register_forward_hook(self.func)
         return model
 
+class SentenceDebiasGPT2LMHeadModel(_SentenceDebiasModel):
+    def __new__(self, model_name_or_path, bias_direction):
+        super().__init__(self, model_name_or_path, bias_direction)
+        model = transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path, return_dict=True,
+                                                            output_hidden_states=True)
+        model.transformer.register_forward_hook(self.func)
+        return model
+
 # INLP Models
 class _INLPModel:
     def __init__(self, model_name_or_path, projection_matrix):
@@ -237,6 +283,14 @@ class INLPLlama2LMHeadModel(_INLPModel):
         model.model.register_forward_hook(self.func)
         return model
 
+class INLPGPT2LMHeadModel(_INLPModel):
+    def __new__(self, model_name_or_path, projection_matrix):
+        super().__init__(self, model_name_or_path, projection_matrix)
+        model = transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path, return_dict=True,
+                                                              output_hidden_states=True)
+        model.transformer.register_forward_hook(self.func)
+        return model
+
 ############################################################################################################
 
 
@@ -255,9 +309,9 @@ class RobertaModel:
         return transformers.RobertaModel.from_pretrained(model_name_or_path)
 
 
-class GPT2Model:
-    def __new__(self, model_name_or_path):
-        return transformers.GPT2Model.from_pretrained(model_name_or_path)
+# class GPT2Model:
+#     def __new__(self, model_name_or_path):
+#         return transformers.GPT2Model.from_pretrained(model_name_or_path)
 
 
 class BertForMaskedLM:
@@ -273,11 +327,6 @@ class AlbertForMaskedLM:
 class RobertaForMaskedLM:
     def __new__(self, model_name_or_path):
         return transformers.RobertaForMaskedLM.from_pretrained(model_name_or_path)
-
-
-class GPT2LMHeadModel:
-    def __new__(self, model_name_or_path):
-        return transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path)
 
 
 class SentenceDebiasBertModel(_SentenceDebiasModel):
@@ -304,12 +353,12 @@ class SentenceDebiasRobertaModel(_SentenceDebiasModel):
         return model
 
 
-class SentenceDebiasGPT2Model(_SentenceDebiasModel):
-    def __new__(self, model_name_or_path, bias_direction):
-        super().__init__(self, model_name_or_path, bias_direction)
-        model = transformers.GPT2Model.from_pretrained(model_name_or_path)
-        model.register_forward_hook(self.func)
-        return model
+# class SentenceDebiasGPT2Model(_SentenceDebiasModel):
+#     def __new__(self, model_name_or_path, bias_direction):
+#         super().__init__(self, model_name_or_path, bias_direction)
+#         model = transformers.GPT2Model.from_pretrained(model_name_or_path)
+#         model.register_forward_hook(self.func)
+#         return model
 
 
 class SentenceDebiasBertForMaskedLM(_SentenceDebiasModel):
@@ -333,14 +382,6 @@ class SentenceDebiasRobertaForMaskedLM(_SentenceDebiasModel):
         super().__init__(self, model_name_or_path, bias_direction)
         model = transformers.RobertaForMaskedLM.from_pretrained(model_name_or_path)
         model.roberta.register_forward_hook(self.func)
-        return model
-
-
-class SentenceDebiasGPT2LMHeadModel(_SentenceDebiasModel):
-    def __new__(self, model_name_or_path, bias_direction):
-        super().__init__(self, model_name_or_path, bias_direction)
-        model = transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path)
-        model.transformer.register_forward_hook(self.func)
         return model
 
 
@@ -368,12 +409,12 @@ class INLPRobertaModel(_INLPModel):
         return model
 
 
-class INLPGPT2Model(_INLPModel):
-    def __new__(self, model_name_or_path, projection_matrix):
-        super().__init__(self, model_name_or_path, projection_matrix)
-        model = transformers.GPT2Model.from_pretrained(model_name_or_path)
-        model.register_forward_hook(self.func)
-        return model
+# class INLPGPT2Model(_INLPModel):
+#     def __new__(self, model_name_or_path, projection_matrix):
+#         super().__init__(self, model_name_or_path, projection_matrix)
+#         model = transformers.GPT2Model.from_pretrained(model_name_or_path)
+#         model.register_forward_hook(self.func)
+#         return model
 
 
 class INLPBertForMaskedLM(_INLPModel):
@@ -400,14 +441,6 @@ class INLPRobertaForMaskedLM(_INLPModel):
         return model
 
 
-class INLPGPT2LMHeadModel(_INLPModel):
-    def __new__(self, model_name_or_path, projection_matrix):
-        super().__init__(self, model_name_or_path, projection_matrix)
-        model = transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path)
-        model.transformer.register_forward_hook(self.func)
-        return model
-
-
 class CDABertModel:
     def __new__(self, model_name_or_path):
         model = transformers.BertModel.from_pretrained(model_name_or_path)
@@ -426,10 +459,10 @@ class CDARobertaModel:
         return model
 
 
-class CDAGPT2Model:
-    def __new__(self, model_name_or_path):
-        model = transformers.GPT2Model.from_pretrained(model_name_or_path)
-        return model
+# class CDAGPT2Model:
+#     def __new__(self, model_name_or_path):
+#         model = transformers.GPT2Model.from_pretrained(model_name_or_path)
+#         return model
 
 
 class CDABertForMaskedLM:
@@ -450,10 +483,7 @@ class CDARobertaForMaskedLM:
         return model
 
 
-class CDAGPT2LMHeadModel:
-    def __new__(self, model_name_or_path):
-        model = transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path)
-        return model
+
 
 
 class DropoutBertModel:
@@ -473,11 +503,11 @@ class DropoutRobertaModel:
         model = transformers.RobertaModel.from_pretrained(model_name_or_path)
         return model
 
-
-class DropoutGPT2Model:
-    def __new__(self, model_name_or_path):
-        model = transformers.GPT2Model.from_pretrained(model_name_or_path)
-        return model
+#
+# class DropoutGPT2Model:
+#     def __new__(self, model_name_or_path):
+#         model = transformers.GPT2Model.from_pretrained(model_name_or_path)
+#         return model
 
 
 class DropoutBertForMaskedLM:
@@ -695,10 +725,4 @@ class SelfDebiasAlbertForMaskedLM:
 class SelfDebiasRobertaForMaskedLM:
     def __new__(self, model_name_or_path):
         model = MaskedLMWrapper(model_name_or_path)
-        return model
-
-
-class SelfDebiasGPT2LMHeadModel:
-    def __new__(self, model_name_or_path):
-        model = GPT2Wrapper(model_name_or_path, use_cuda=False)
         return model
