@@ -1,0 +1,182 @@
+{
+    "100": {
+        "race-color": {
+            "Anti-stereotype score": 34.88,
+            "Metric score": 67.05,
+            "Num. neutral": 0.0,
+            "Stereotype score": 69.98,
+            "Total examples": 516
+        }
+    },
+    "1000": {
+        "race-color": {
+            "Anti-stereotype score": 34.88,
+            "Metric score": 61.43,
+            "Num. neutral": 0.19,
+            "Stereotype score": 63.98,
+            "Total examples": 516
+        }
+    },
+    "1100": {
+        "race-color": {
+            "Anti-stereotype score": 34.88,
+            "Metric score": 61.63,
+            "Num. neutral": 0.19,
+            "Stereotype score": 64.19,
+            "Total examples": 516
+        }
+    },
+    "1200": {
+        "race-color": {
+            "Anti-stereotype score": 37.21,
+            "Metric score": 60.85,
+            "Num. neutral": 0.0,
+            "Stereotype score": 63.0,
+            "Total examples": 516
+        }
+    },
+    "1300": {
+        "race-color": {
+            "Anti-stereotype score": 32.56,
+            "Metric score": 61.24,
+            "Num. neutral": 0.19,
+            "Stereotype score": 63.98,
+            "Total examples": 516
+        }
+    },
+    "1400": {
+        "race-color": {
+            "Anti-stereotype score": 32.56,
+            "Metric score": 61.24,
+            "Num. neutral": 0.19,
+            "Stereotype score": 63.98,
+            "Total examples": 516
+        }
+    },
+    "1500": {
+        "race-color": {
+            "Anti-stereotype score": 32.56,
+            "Metric score": 61.82,
+            "Num. neutral": 0.19,
+            "Stereotype score": 64.62,
+            "Total examples": 516
+        }
+    },
+    "1600": {
+        "race-color": {
+            "Anti-stereotype score": 37.21,
+            "Metric score": 61.43,
+            "Num. neutral": 0.19,
+            "Stereotype score": 63.77,
+            "Total examples": 516
+        }
+    },
+    "1700": {
+        "race-color": {
+            "Anti-stereotype score": 34.88,
+            "Metric score": 61.05,
+            "Num. neutral": 0.0,
+            "Stereotype score": 63.42,
+            "Total examples": 516
+        }
+    },
+    "1800": {
+        "race-color": {
+            "Anti-stereotype score": 34.88,
+            "Metric score": 60.85,
+            "Num. neutral": 0.19,
+            "Stereotype score": 63.35,
+            "Total examples": 516
+        }
+    },
+    "1900": {
+        "race-color": {
+            "Anti-stereotype score": 34.88,
+            "Metric score": 60.85,
+            "Num. neutral": 0.0,
+            "Stereotype score": 63.21,
+            "Total examples": 516
+        }
+    },
+    "200": {
+        "race-color": {
+            "Anti-stereotype score": 34.88,
+            "Metric score": 66.28,
+            "Num. neutral": 0.0,
+            "Stereotype score": 69.13,
+            "Total examples": 516
+        }
+    },
+    "2000": {
+        "race-color": {
+            "Anti-stereotype score": 34.88,
+            "Metric score": 60.85,
+            "Num. neutral": 0.19,
+            "Stereotype score": 63.35,
+            "Total examples": 516
+        }
+    },
+    "300": {
+        "race-color": {
+            "Anti-stereotype score": 34.88,
+            "Metric score": 65.7,
+            "Num. neutral": 0.0,
+            "Stereotype score": 68.5,
+            "Total examples": 516
+        }
+    },
+    "400": {
+        "race-color": {
+            "Anti-stereotype score": 37.21,
+            "Metric score": 66.47,
+            "Num. neutral": 0.0,
+            "Stereotype score": 69.13,
+            "Total examples": 516
+        }
+    },
+    "500": {
+        "race-color": {
+            "Anti-stereotype score": 37.21,
+            "Metric score": 63.95,
+            "Num. neutral": 0.0,
+            "Stereotype score": 66.38,
+            "Total examples": 516
+        }
+    },
+    "600": {
+        "race-color": {
+            "Anti-stereotype score": 37.21,
+            "Metric score": 62.79,
+            "Num. neutral": 0.0,
+            "Stereotype score": 65.12,
+            "Total examples": 516
+        }
+    },
+    "700": {
+        "race-color": {
+            "Anti-stereotype score": 34.88,
+            "Metric score": 62.02,
+            "Num. neutral": 0.0,
+            "Stereotype score": 64.48,
+            "Total examples": 516
+        }
+    },
+    "800": {
+        "race-color": {
+            "Anti-stereotype score": 32.56,
+            "Metric score": 62.21,
+            "Num. neutral": 0.0,
+            "Stereotype score": 64.9,
+            "Total examples": 516
+        }
+    },
+    "900": {
+        "race-color": {
+            "Anti-stereotype score": 34.88,
+            "Metric score": 61.63,
+            "Num. neutral": 0.19,
+            "Stereotype score": 64.19,
+            "Total examples": 516
+        }
+    }
+}
