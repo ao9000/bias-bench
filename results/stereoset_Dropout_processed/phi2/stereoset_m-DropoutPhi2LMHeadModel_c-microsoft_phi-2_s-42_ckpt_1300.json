@@ -1,0 +1,42 @@
+{
+  "stereoset_m-DropoutPhi2LMHeadModel_c-microsoft_phi-2_s-42_ckpt_1300": {
+    "intrasentence": {
+      "gender": {
+        "Count": 2313.0,
+        "LM Score": 92.01646385986716,
+        "SS Score": 68.99060282915853,
+        "ICAT Score": 57.06750148174002
+      },
+      "profession": {
+        "Count": 7194.0,
+        "LM Score": 91.83340567372126,
+        "SS Score": 67.41923708034041,
+        "ICAT Score": 59.84004836720868
+      },
+      "race": {
+        "Count": 8928.0,
+        "LM Score": 91.96546637879308,
+        "SS Score": 60.472752428578474,
+        "ICAT Score": 72.70283515151594
+      },
+      "religion": {
+        "Count": 741.0,
+        "LM Score": 92.91787949710333,
+        "SS Score": 68.5086425816867,
+        "ICAT Score": 58.52220307590092
+      },
+      "overall": {
+        "Count": 6392.0,
+        "LM Score": 91.95809521780363,
+        "SS Score": 64.41094309822289,
+        "ICAT Score": 65.45403766570902
+      }
+    },
+    "overall": {
+      "Count": 6392.0,
+      "LM Score": 91.95809521780363,
+      "SS Score": 64.41094309822289,
+      "ICAT Score": 65.45403766570902
+    }
+  }
+}
