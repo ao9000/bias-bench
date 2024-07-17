@@ -61,6 +61,9 @@ parser.add_argument(
 
         "CDAPhi2LMHeadModel",  # For phi 2 debiased models
         "CDALlama2LMHeadModel",  # For llama 2 debiased models
+
+        "DropoutPhi2LMHeadModel", # For phi 2 debiased models
+        "DropoutLlama2LMHeadModel", # For llama 2 debiased models
     ],
     help="Model to evalute (e.g., SentenceDebiasBertForMaskedLM).",
 )

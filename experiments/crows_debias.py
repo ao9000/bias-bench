@@ -60,6 +60,9 @@ parser.add_argument(
 
         "SelfDebiasLlama2LMHeadModel", # For llama 2 debiased models
         "SelfDebiasPhi2LMHeadModel", # For phi 2 debiased models
+
+        "DropoutLlama2LMHeadModel", # For llama 2 debiased models
+        "DropoutPhi2LMHeadModel", # For phi 2 debiased models
     ],
     help="Model to evalute (e.g., SentenceDebiasBertForMaskedLM). Typically, these "
     "correspond to a HuggingFace class.",
@@ -94,7 +97,7 @@ parser.add_argument(
 parser.add_argument(
    "--bias_type",
    action="store",
-   default="gender",
+   default=None,
    choices=["race-color", "gender", "socioeconomic", "sexual-orientation", "religion", "age", "nationality", "disability", "physical-appearance"],
    help="Determines which CrowS-Pairs dataset split to evaluate against.",
 )

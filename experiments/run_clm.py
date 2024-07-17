@@ -420,15 +420,18 @@ def main():
             config.resid_pdrop = 0.15
             config.embd_pdrop = 0.15
             config.attn_pdrop = 0.15
+            print("Set resid_pdrop, embd_pdrop, and attn_pdrop to 0.15.")
         elif model_args.model_name_or_path == "meta-llama/Llama-2-7b-hf":
             # Reference: https://huggingface.co/docs/transformers/en/model_doc/llama2
             config.attention_dropout = 0.15
+            print("Set attention_dropout to 0.15.")
         elif model_args.model_name_or_path == "microsoft/phi-2":
             # Reference: https://huggingface.co/docs/transformers/en/model_doc/phi
             config.resid_pdrop = 0.15
             config.embd_pdrop = 0.15
             config.attention_dropout = 0.15
-
+            print("Set resid_pdrop, embd_pdrop, and attention_dropout to 0.15.")
+            
     tokenizer_kwargs = {
         "cache_dir": model_args.cache_dir,
         "use_fast": model_args.use_fast_tokenizer,
@@ -483,6 +486,8 @@ def main():
                 task_type="CAUSAL_LM",
             )
             tokenizer.padding_side = "right"
+
+            print("Lora Dropout: ", peft_config.lora_dropout)
 
         model = AutoModelForCausalLM.from_pretrained(
             model_args.model_name_or_path,
