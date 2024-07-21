@@ -62,6 +62,14 @@ parser.add_argument(
     help="Determines which CrowS-Pairs dataset split to evaluate against.",
 )
 
+# Add argument for custom dataset
+parser.add_argument(
+    "--custom_dataset_path",
+    action="store",
+    type=str,
+    default=None,
+    help="Path to a custom CrowS-Pairs dataset CSV file.",
+)
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -87,7 +95,7 @@ if __name__ == "__main__":
     runner = CrowSPairsRunner(
         model=model,
         tokenizer=tokenizer,
-        input_file=f"{args.persistent_dir}/data/crows/crows_pairs_anonymized.csv",
+        input_file=f"{args.persistent_dir}/data/crows/crows_pairs_anonymized.csv" if args.custom_dataset_path is None else f"{args.persistent_dir}/data/crows/{args.custom_dataset_path}",
         bias_type=args.bias_type,
         is_generative=_is_generative(args.model),  # Affects model scoring.
         model_name_or_path=args.model_name_or_path, # Added to determine unconditional start token
@@ -99,7 +107,14 @@ if __name__ == "__main__":
     # Remove any slash from file experiment_id
     experiment_id = experiment_id.replace("/", "_")
 
-    os.makedirs(f"{args.persistent_dir}/results/crows", exist_ok=True)
-    with open(f"{args.persistent_dir}/results/crows/{experiment_id}.json", "w") as f:
+    if args.custom_dataset_path is None:
+        path = f"{args.persistent_dir}/results/crows/{experiment_id}.json"
+        path_dir = f"{args.persistent_dir}/results/crows"
+    else:
+        path = f"{args.persistent_dir}/results/crows_sg_context/{experiment_id}.json"
+        path_dir = f"{args.persistent_dir}/results/crows_sg_context"
+    
+    os.makedirs(path_dir, exist_ok=True)
+    with open(path, "w") as f:
         # json.dump(results, f)
         json.dump(results, f, indent=4, sort_keys=True)
