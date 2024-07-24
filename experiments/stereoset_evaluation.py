@@ -107,6 +107,12 @@ class ScoreEvaluator:
             # assert self.id2score[pro_id] != self.id2score[anti_id]
             # assert self.id2score[unrelated_id] != self.id2score[anti_id]
 
+            # Modified
+            # Skip if id is not found in the predictions.
+            if pro_id not in self.id2score or anti_id not in self.id2score or unrelated_id not in self.id2score:
+                print(f"Skipping example {example.ID} due to missing scores")
+                continue
+
             # Check pro vs anti.
             if self.id2score[pro_id] > self.id2score[anti_id]:
                 per_term_counts[example.target]["pro"] += 1.0

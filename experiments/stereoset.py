@@ -70,6 +70,15 @@ parser.add_argument(
     help="RNG seed. Used for logging in experiment ID.",
 )
 
+# Add argument for custom dataset
+parser.add_argument(
+    "--custom_dataset_path",
+    action="store",
+    type=str,
+    default=None,
+    help="Path to a custom CrowS-Pairs dataset CSV file.",
+)
+
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -95,7 +104,7 @@ if __name__ == "__main__":
     runner = StereoSetRunner(
         intrasentence_model=model,
         tokenizer=tokenizer,
-        input_file=f"{args.persistent_dir}/data/stereoset/test.json",
+        input_file=f"{args.persistent_dir}/data/stereoset/test.json" if args.custom_dataset_path is None else f"{args.persistent_dir}/data/stereoset/{args.custom_dataset_path}",
         model_name_or_path=args.model_name_or_path,
         batch_size=args.batch_size,
         is_generative=_is_generative(args.model),
@@ -105,9 +114,14 @@ if __name__ == "__main__":
     # Modified
     # Remove any slash from file experiment_id
     experiment_id = experiment_id.replace("/", "_")
+
+    if args.custom_dataset_path is None:
+        path = f"{args.persistent_dir}/results/stereoset/{experiment_id}.json"
+        path_dir = f"{args.persistent_dir}/results/stereoset"
+    else:
+        path = f"{args.persistent_dir}/results/adapted_dataset/stereoset/{experiment_id}.json"
+        path_dir = f"{args.persistent_dir}/results/adapted_dataset/stereoset"
     
-    os.makedirs(f"{args.persistent_dir}/results/stereoset", exist_ok=True)
-    with open(
-        f"{args.persistent_dir}/results/stereoset/{experiment_id}.json", "w"
-    ) as f:
+    os.makedirs(path_dir, exist_ok=True)
+    with open(path, "w") as f:
         json.dump(results, f, indent=2)
