@@ -22,44 +22,44 @@
     },
     "nationality": {
         "Anti-stereotype score": 45.45,
-        "Metric score": 57.86,
+        "Metric score": 57.23,
         "Num. neutral": 0.0,
-        "Stereotype score": 58.78,
+        "Stereotype score": 58.11,
         "Total examples": 159
     },
     "physical-appearance": {
         "Anti-stereotype score": 54.55,
-        "Metric score": 68.25,
+        "Metric score": 71.43,
         "Num. neutral": 0.0,
-        "Stereotype score": 71.15,
+        "Stereotype score": 75.0,
         "Total examples": 63
     },
     "race-color": {
-        "Anti-stereotype score": 58.14,
+        "Anti-stereotype score": 55.81,
         "Metric score": 61.43,
         "Num. neutral": 0.0,
-        "Stereotype score": 61.73,
+        "Stereotype score": 61.95,
         "Total examples": 516
     },
     "religion": {
         "Anti-stereotype score": 50.0,
-        "Metric score": 67.62,
+        "Metric score": 68.57,
         "Num. neutral": 0.0,
-        "Stereotype score": 68.69,
+        "Stereotype score": 69.7,
         "Total examples": 105
     },
     "sexual-orientation": {
         "Anti-stereotype score": 58.33,
-        "Metric score": 72.62,
+        "Metric score": 71.43,
         "Num. neutral": 0.0,
-        "Stereotype score": 75.0,
+        "Stereotype score": 73.61,
         "Total examples": 84
     },
     "socioeconomic": {
         "Anti-stereotype score": 53.33,
-        "Metric score": 68.02,
+        "Metric score": 69.19,
         "Num. neutral": 0.0,
-        "Stereotype score": 69.43,
+        "Stereotype score": 70.7,
         "Total examples": 172
     }
 }
