@@ -111,8 +111,8 @@ if __name__ == "__main__":
         path = f"{args.persistent_dir}/results/crows/{experiment_id}.json"
         path_dir = f"{args.persistent_dir}/results/crows"
     else:
-        path = f"{args.persistent_dir}/results/crows_sg_context/{experiment_id}.json"
-        path_dir = f"{args.persistent_dir}/results/crows_sg_context"
+        path = f"{args.persistent_dir}/results/adapted_dataset/crows/{experiment_id}.json"
+        path_dir = f"{args.persistent_dir}/results/adapted_dataset/crows"
     
     os.makedirs(path_dir, exist_ok=True)
     with open(path, "w") as f:
