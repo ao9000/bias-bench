@@ -55,6 +55,9 @@ class ScoreEvaluator:
         Returns:
             Overall, a dictionary of composite scores for the intrasentence task.
         """
+        # Modified
+        self.skipped_samples = 0 # Number of samples skipped due to missing scores.
+
         # Cluster ID, gold_label to sentence ID.
         stereoset = dataloader.StereoSet(gold_file_path)
         self.intrasentence_examples = stereoset.get_intrasentence_examples()
@@ -111,6 +114,7 @@ class ScoreEvaluator:
             # Skip if id is not found in the predictions.
             if pro_id not in self.id2score or anti_id not in self.id2score or unrelated_id not in self.id2score:
                 print(f"Skipping example {example.ID} due to missing scores")
+                self.skipped_samples += 1
                 continue
 
             # Check pro vs anti.
@@ -130,6 +134,10 @@ class ScoreEvaluator:
             per_term_counts[example.target]["total"] += 1.0
 
         return per_term_counts
+
+    # Modified
+    def get_skipped_samples(self):
+        return self.skipped_samples
 
     def score(self, counts):
         ss_scores = []
@@ -192,6 +200,9 @@ def parse_file(gold_file, predictions_file):
     )
     overall = score_evaluator.get_overall_results()
     score_evaluator.pretty_print(overall)
+
+    # Modified
+    print(f"Number of skipped samples: {score_evaluator.get_skipped_samples()}")
 
     if args.output_file:
         output_file = args.output_file

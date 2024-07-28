@@ -107,33 +107,39 @@ class StereoSet(object):
     def __create_intrasentence_examples__(self, examples):
         created_examples = []
         for example in examples:
-            sentences = []
-            for sentence in example["sentences"]:
-                labels = []
-                for label in sentence["labels"]:
-                    labels.append(Label(**label))
-                sentence_obj = Sentence(
-                    sentence["id"], sentence["sentence"], labels, sentence["gold_label"]
+            # Modified
+            try:
+                sentences = []
+                for sentence in example["sentences"]:
+                    labels = []
+                    for label in sentence["labels"]:
+                        labels.append(Label(**label))
+                    sentence_obj = Sentence(
+                        sentence["id"], sentence["sentence"], labels, sentence["gold_label"]
+                    )
+                    word_idx = None
+                    for idx, word in enumerate(example["context"].split(" ")):
+                        if "BLANK" in word:
+                            word_idx = idx
+                    if word_idx is None:
+                        raise Exception("No blank word found.")
+                    template_word = sentence["sentence"].split(" ")[word_idx]
+                    sentence_obj.template_word = template_word.translate(
+                        str.maketrans("", "", string.punctuation)
+                    )
+                    sentences.append(sentence_obj)
+                created_example = IntrasentenceExample(
+                    example["id"],
+                    example["bias_type"],
+                    example["target"],
+                    example["context"],
+                    sentences,
                 )
-                word_idx = None
-                for idx, word in enumerate(example["context"].split(" ")):
-                    if "BLANK" in word:
-                        word_idx = idx
-                if word_idx is None:
-                    raise Exception("No blank word found.")
-                template_word = sentence["sentence"].split(" ")[word_idx]
-                sentence_obj.template_word = template_word.translate(
-                    str.maketrans("", "", string.punctuation)
-                )
-                sentences.append(sentence_obj)
-            created_example = IntrasentenceExample(
-                example["id"],
-                example["bias_type"],
-                example["target"],
-                example["context"],
-                sentences,
-            )
-            created_examples.append(created_example)
+                created_examples.append(created_example)
+            # Modified to print example ID of bad sample
+            except Exception as e:
+                print(f"Error: {e}")
+                print(f"Example ID: {example['id']}")
         return created_examples
 
     def get_intrasentence_examples(self):

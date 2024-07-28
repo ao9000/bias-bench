@@ -173,9 +173,10 @@ class LlamaForCausalLM_NonBFloat16:
     def __new__(self, model_name_or_path):
         return transformers.LlamaForCausalLM.from_pretrained(model_name_or_path, output_hidden_states=True)
 
-class GPT2LMHeadModel_NonBFloat16:
+class GPT2Model:
     def __new__(self, model_name_or_path):
-        return transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path, output_hidden_states=True)
+        return transformers.GPT2Model.from_pretrained(model_name_or_path, output_hidden_states=True)
+
 
 # Sentence Debias Models
 class _SentenceDebiasModel:
@@ -291,6 +292,79 @@ class INLPGPT2LMHeadModel(_INLPModel):
         model.transformer.register_forward_hook(self.func)
         return model
 
+# Dropout models
+class DropoutGPT2LMHeadModel:
+    def __new__(self, model_name_or_path):
+        # model = transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path)
+        # return model
+
+        # Method 1: Combine adaptors, unload model then load
+        # model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path).bfloat16()
+
+        # Method 2: Load model directly using peft
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+        )
+
+        model = AutoPeftModelForCausalLM.from_pretrained(
+            model_name_or_path,
+            device_map="auto",
+            torch_dtype=torch.bfloat16,
+            output_hidden_states=True,
+            quantization_config=bnb_config,
+        ).bfloat16()
+        return model
+
+class DropoutPhi2LMHeadModel:
+    def __new__(self, model_name_or_path):
+        # model = transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path)
+        # return model
+
+        # Method 1: Combine adaptors, unload model then load
+        # model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path).bfloat16()
+
+        # Method 2: Load model directly using peft
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+        )
+
+        model = AutoPeftModelForCausalLM.from_pretrained(
+            model_name_or_path,
+            device_map="auto",
+            torch_dtype=torch.bfloat16,
+            output_hidden_states=True,
+            quantization_config=bnb_config,
+        ).bfloat16()
+        return model
+
+class DropoutLlama2LMHeadModel:
+    def __new__(self, model_name_or_path):
+        # model = transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path)
+        # return model
+
+        # Method 1: Combine adaptors, unload model then load
+        # model = transformers.LlamaForCausalLM.from_pretrained(model_name_or_path).bfloat16()
+
+        # Method 2: Load model directly using peft
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+        )
+
+        model = AutoPeftModelForCausalLM.from_pretrained(
+            model_name_or_path,
+            device_map="auto",
+            torch_dtype=torch.bfloat16,
+            output_hidden_states=True,
+            quantization_config=bnb_config,
+        ).bfloat16()
+        return model
+
 ############################################################################################################
 
 
@@ -307,11 +381,6 @@ class AlbertModel:
 class RobertaModel:
     def __new__(self, model_name_or_path):
         return transformers.RobertaModel.from_pretrained(model_name_or_path)
-
-
-# class GPT2Model:
-#     def __new__(self, model_name_or_path):
-#         return transformers.GPT2Model.from_pretrained(model_name_or_path)
 
 
 class BertForMaskedLM:
@@ -525,12 +594,6 @@ class DropoutAlbertForMaskedLM:
 class DropoutRobertaForMaskedLM:
     def __new__(self, model_name_or_path):
         model = transformers.RobertaForMaskedLM.from_pretrained(model_name_or_path)
-        return model
-
-
-class DropoutGPT2LMHeadModel:
-    def __new__(self, model_name_or_path):
-        model = transformers.GPT2LMHeadModel.from_pretrained(model_name_or_path)
         return model
 
 

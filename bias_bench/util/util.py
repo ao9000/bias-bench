@@ -37,7 +37,7 @@
 def get_target_modules_for_model(model_name):
     # Return all linear layers to be as good as full fine-tuning performance
     target_modules = {
-        "gpt2": ["query", "value"],
+        "gpt2": ["c_attn", "c_proj", "c_fc"],
         "microsoft/phi-2": ["q_proj", "k_proj", "v_proj", "dense", "fc1", "fc2"],
         "meta-llama/Llama-2-7b-hf": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
     }
@@ -99,10 +99,11 @@ def _is_generative(model):
     # Checks if we are running an autoregressive model.
     return model in [
         "GPT2LMHeadModel",
+        "GPT2LMHeadModel_NonBFloat16" # For sentence debiasing and INLP
         "SentenceDebiasGPT2LMHeadModel",
         "INLPGPT2LMHeadModel",
         "CDAGPT2LMHeadModel",
-        "DropoutGPT2LMHeadModel",
+        "DropoutGPT2LMHeadModel", # For dropout models
         "SelfDebiasGPT2LMHeadModel",
 
         "AutoModelForCausalLM",  # For other huggingface models
@@ -123,6 +124,9 @@ def _is_generative(model):
 
         "PhiForCausalLM_NonBFloat16", # For phi models
         "LlamaForCausalLM_NonBFloat16", # For llama 2 models
+
+        "DropoutLlama2LMHeadModel", # For dropout models (Llama 2)
+        "DropoutPhi2LMHeadModel", # For dropout models (Phi 2)
 
     ]
 
