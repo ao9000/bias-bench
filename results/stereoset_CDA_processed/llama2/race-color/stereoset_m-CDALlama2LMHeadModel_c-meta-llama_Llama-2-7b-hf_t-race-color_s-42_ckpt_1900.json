@@ -1,5 +1,5 @@
 {
-  "llama2set_m-CDALlama2LMHeadModel_c-meta-llama_Llama-2-7b-hf_t-race-color_s-42_ckpt_1900": {
+  "stereoset_m-CDALlama2LMHeadModel_c-meta-llama_Llama-2-7b-hf_t-race-color_s-42_ckpt_1900": {
     "intrasentence": {
       "gender": {
         "Count": 2313.0,
