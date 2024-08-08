@@ -1,0 +1,182 @@
+{
+    "100": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 58.1,
+            "Num. neutral": 0.0,
+            "Stereotype score": 61.22,
+            "Total examples": 105
+        }
+    },
+    "1000": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 54.29,
+            "Num. neutral": 0.0,
+            "Stereotype score": 57.14,
+            "Total examples": 105
+        }
+    },
+    "1100": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 57.14,
+            "Num. neutral": 0.0,
+            "Stereotype score": 60.2,
+            "Total examples": 105
+        }
+    },
+    "1200": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 54.29,
+            "Num. neutral": 0.0,
+            "Stereotype score": 57.14,
+            "Total examples": 105
+        }
+    },
+    "1300": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 57.14,
+            "Num. neutral": 0.0,
+            "Stereotype score": 60.2,
+            "Total examples": 105
+        }
+    },
+    "1400": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 56.19,
+            "Num. neutral": 0.0,
+            "Stereotype score": 59.18,
+            "Total examples": 105
+        }
+    },
+    "1500": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 56.19,
+            "Num. neutral": 0.0,
+            "Stereotype score": 59.18,
+            "Total examples": 105
+        }
+    },
+    "1600": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 56.19,
+            "Num. neutral": 0.0,
+            "Stereotype score": 59.18,
+            "Total examples": 105
+        }
+    },
+    "1700": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 54.29,
+            "Num. neutral": 0.0,
+            "Stereotype score": 57.14,
+            "Total examples": 105
+        }
+    },
+    "1800": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 55.24,
+            "Num. neutral": 0.0,
+            "Stereotype score": 58.16,
+            "Total examples": 105
+        }
+    },
+    "1900": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 55.24,
+            "Num. neutral": 0.0,
+            "Stereotype score": 58.16,
+            "Total examples": 105
+        }
+    },
+    "200": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 58.1,
+            "Num. neutral": 0.0,
+            "Stereotype score": 61.22,
+            "Total examples": 105
+        }
+    },
+    "2000": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 57.14,
+            "Num. neutral": 0.0,
+            "Stereotype score": 60.2,
+            "Total examples": 105
+        }
+    },
+    "300": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 55.24,
+            "Num. neutral": 0.0,
+            "Stereotype score": 58.16,
+            "Total examples": 105
+        }
+    },
+    "400": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 54.29,
+            "Num. neutral": 0.0,
+            "Stereotype score": 57.14,
+            "Total examples": 105
+        }
+    },
+    "500": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 53.33,
+            "Num. neutral": 0.0,
+            "Stereotype score": 56.12,
+            "Total examples": 105
+        }
+    },
+    "600": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 52.38,
+            "Num. neutral": 0.0,
+            "Stereotype score": 55.1,
+            "Total examples": 105
+        }
+    },
+    "700": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 53.33,
+            "Num. neutral": 0.0,
+            "Stereotype score": 56.12,
+            "Total examples": 105
+        }
+    },
+    "800": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 55.24,
+            "Num. neutral": 0.0,
+            "Stereotype score": 58.16,
+            "Total examples": 105
+        }
+    },
+    "900": {
+        "religion": {
+            "Anti-stereotype score": 16.67,
+            "Metric score": 56.19,
+            "Num. neutral": 0.0,
+            "Stereotype score": 59.18,
+            "Total examples": 105
+        }
+    }
+}
