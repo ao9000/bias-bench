@@ -1,0 +1,42 @@
+{
+  "stereoset_m-SelfDebiasGPT2LMHeadModel_c-gpt2_t-religion_s-42": {
+    "intrasentence": {
+      "gender": {
+        "Count": 2298.0,
+        "LM Score": 75.46073412954973,
+        "SS Score": 51.885308944854174,
+        "ICAT Score": 72.61539818875568
+      },
+      "profession": {
+        "Count": 0,
+        "LM Score": NaN,
+        "SS Score": NaN,
+        "ICAT Score": NaN
+      },
+      "race": {
+        "Count": 8877.0,
+        "LM Score": 75.81041350985532,
+        "SS Score": 49.20272144779945,
+        "ICAT Score": 74.60157317535807
+      },
+      "religion": {
+        "Count": 735.0,
+        "LM Score": 77.84649542312378,
+        "SS Score": 48.0575873679322,
+        "ICAT Score": 74.8222951016821
+      },
+      "overall": {
+        "Count": 3970.0,
+        "LM Score": 75.86195532439643,
+        "SS Score": 49.66437551485758,
+        "ICAT Score": 75.35273273044348
+      }
+    },
+    "overall": {
+      "Count": 3970.0,
+      "LM Score": 75.86195532439643,
+      "SS Score": 49.66437551485758,
+      "ICAT Score": 75.35273273044348
+    }
+  }
+}
