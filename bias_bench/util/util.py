@@ -99,8 +99,8 @@ def _is_generative(model):
     # Checks if we are running an autoregressive model.
     return model in [
         "GPT2LMHeadModel",
-        "GPT2LMHeadModel_NonBFloat16" # For sentence debiasing and INLP
-        "SentenceDebiasGPT2LMHeadModel",
+        "GPT2LMHeadModel_NonBFloat16", # For sentence debiasing and INLP
+        "SentenceDebiasGPT2LMHeadModel", # For sentence debiasing models
         "INLPGPT2LMHeadModel",
         "CDAGPT2LMHeadModel",
         "DropoutGPT2LMHeadModel", # For dropout models

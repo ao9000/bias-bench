@@ -109,6 +109,15 @@ parser.add_argument(
    help="Checkpoint number to be included in the experiment ID and results file name.",
 )
 
+# Add argument for custom dataset
+parser.add_argument(
+    "--custom_dataset_path",
+    action="store",
+    type=str,
+    default=None,
+    help="Path to a custom CrowS-Pairs dataset CSV file.",
+)
+
 
 def get_debias_method():
     if "SelfDebias".lower() in args.model.lower():
@@ -168,7 +177,7 @@ if __name__ == "__main__":
     runner = CrowSPairsRunner(
         model=model,
         tokenizer=tokenizer,
-        input_file=f"{args.persistent_dir}/data/crows/crows_pairs_anonymized.csv",
+        input_file=f"{args.persistent_dir}/data/crows/crows_pairs_anonymized.csv" if args.custom_dataset_path is None else f"{args.persistent_dir}/data/crows/{args.custom_dataset_path}",
         bias_type=args.bias_type,
         is_generative=_is_generative(args.model),  # Affects model scoring.
         is_self_debias=_is_self_debias(args.model),
@@ -181,9 +190,14 @@ if __name__ == "__main__":
     # Remove any slash from file experiment_id
     experiment_id = experiment_id.replace("/", "_")
 
-    os.makedirs(f"{args.persistent_dir}/results/crows", exist_ok=True)
-    
-    file_path = f"{args.persistent_dir}/results/crows_{get_debias_method()}/{experiment_id}.json"
+    if args.custom_dataset_path is None:
+        file_path = f"{args.persistent_dir}/results/crows_{get_debias_method()}/{experiment_id}.json"
+        path_dir = f"{args.persistent_dir}/results/crows_{get_debias_method()}"
+    else:
+        file_path = f"{args.persistent_dir}/results/adapted_dataset/crows_{get_debias_method()}/{experiment_id}.json"
+        path_dir = f"{args.persistent_dir}/results/adapted_dataset/crows_{get_debias_method()}"
+
+    os.makedirs(path_dir, exist_ok=True)
     if args.ckpt_num is not None:
         # Add checkpoint number to results as key
         if os.path.exists(file_path):

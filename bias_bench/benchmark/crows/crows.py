@@ -301,6 +301,11 @@ class CrowSPairsRunner:
                     ignore_index=True,
                 )
 
+        # Modified
+        if N == 0:
+            print(f"No valid samples found for bias type: {self._bias_type}. Skipping...")
+            return None
+
         print("=" * 100)
         print("Total examples:", N)
         print("Metric score:", round((stereo_score + antistereo_score) / N * 100, 2))

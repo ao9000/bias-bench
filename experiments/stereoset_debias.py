@@ -129,6 +129,15 @@ parser.add_argument(
    help="Checkpoint number to be included in the experiment ID and results file name.",
 )
 
+# Add argument for custom dataset
+parser.add_argument(
+    "--custom_dataset_path",
+    action="store",
+    type=str,
+    default=None,
+    help="Path to a custom CrowS-Pairs dataset CSV file.",
+)
+
 
 def get_debias_method():
     if "SelfDebias".lower() in args.model.lower():
@@ -196,7 +205,7 @@ if __name__ == "__main__":
     runner = StereoSetRunner(
         intrasentence_model=model,
         tokenizer=tokenizer,
-        input_file=f"{args.persistent_dir}/data/stereoset/test.json",
+        input_file=f"{args.persistent_dir}/data/stereoset/test.json" if args.custom_dataset_path is None else f"{args.persistent_dir}/data/stereoset/{args.custom_dataset_path}",
         model_name_or_path=args.model_name_or_path,
         batch_size=args.batch_size,
         is_generative=_is_generative(args.model),
@@ -208,9 +217,19 @@ if __name__ == "__main__":
     # Remove any slash from file experiment_id
     experiment_id = experiment_id.replace("/", "_")
 
-    os.makedirs(f"{args.persistent_dir}/results/stereoset", exist_ok=True)
-    with open(
-        f"{args.persistent_dir}/results/stereoset_{get_debias_method()}/{experiment_id}.json" if args.ckpt_num is None
-        else f"{args.persistent_dir}/results/stereoset_{get_debias_method()}/{experiment_id}_ckpt_{args.ckpt_num}.json", "w"
-    ) as f:
+    if args.custom_dataset_path is None:
+        path = f"{args.persistent_dir}/results/stereoset_{get_debias_method()}/{experiment_id}.json"
+        path_dir = f"{args.persistent_dir}/results/stereoset_{get_debias_method()}"
+
+        if args.ckpt_num is not None:
+            path = f"{args.persistent_dir}/results/stereoset_{get_debias_method()}/{experiment_id}_ckpt_{args.ckpt_num}.json"
+    else:
+        path = f"{args.persistent_dir}/results/adapted_dataset/stereoset_{get_debias_method()}/{experiment_id}.json"
+        path_dir = f"{args.persistent_dir}/results/adapted_dataset/stereoset_{get_debias_method()}"
+
+        if args.ckpt_num is not None:
+            path = f"{args.persistent_dir}/results/adapted_dataset/stereoset_{get_debias_method()}/{experiment_id}_ckpt_{args.ckpt_num}.json"
+
+    os.makedirs(path_dir, exist_ok=True)
+    with open(path, "w") as f:
         json.dump(results, f, indent=2)
