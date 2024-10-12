@@ -1,5 +1,5 @@
 *.idea
 config.yml
 *.pyc
-*results
 *checkpoint.ipynb
+*future_work/Datasets
